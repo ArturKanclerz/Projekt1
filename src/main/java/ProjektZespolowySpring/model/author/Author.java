@@ -14,8 +14,6 @@ public class Author {
     @Column(name = "ID")
     private int id;
 
-
-
     @Column(nullable = false)
     private String firstName;
 

@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import ProjektZespolowySpring.model.authority.Authority;
+import ProjektZespolowySpring.model.loan.Loan;
 
 @Entity
 @Table(name = "users")
@@ -29,6 +30,11 @@ public class User {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Authority> authorities;
+
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Loan> loans;
+
 
     public User() {
     }

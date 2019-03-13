@@ -1,6 +1,8 @@
 package ProjektZespolowySpring.model.book;
 
 import ProjektZespolowySpring.model.author.Author;
+import ProjektZespolowySpring.model.loan.Loan;
+import ProjektZespolowySpring.model.user.User;
 
 import javax.persistence.*;
 import java.util.List;
@@ -26,6 +28,14 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "authorId", referencedColumnName = "ID")
     )
     private List<Author> authors;
+
+    @ManyToOne
+    @JoinColumn(name = "books")
+    private Loan loan;
+
+    public Book(String title){
+        this.title = title;
+    }
 
     public int getId() {
         return id;
