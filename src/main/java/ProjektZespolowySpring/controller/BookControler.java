@@ -40,6 +40,12 @@ public class BookControler {
     public Optional<Book> getBook(@PathVariable int id){
         return bookRepository.findById(id);
     }
+
+    @DeleteMapping("/books/{id}")
+    public String deleteBook(@PathVariable int id){
+        bookRepository.deleteById(id);
+        return "Delete book id[" +id +"]";
+    }
 }
 
 
