@@ -1,5 +1,7 @@
 package ProjektZespolowySpring.model.book;
 
+import ProjektZespolowySpring.model.author.Author;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -7,36 +9,24 @@ public class BookForm {
 
     @NotNull
     @Size (max = 255)
-    private String authorFirstName;
-
-    @NotNull
-    @Size (max = 255)
-    private  String authorLastName;
-
-    @NotNull
-    @Size (max = 255)
     private String title;
 
-    public BookForm(@NotNull @Size(max = 255) String authorFirstName, @NotNull @Size(max = 255) String authorLastName, @NotNull @Size(max = 255) String title) {
-        this.authorFirstName = authorFirstName;
-        this.authorLastName = authorLastName;
+    @NotNull
+    private int authorId;
+
+    public BookForm(@NotNull @Size(max = 255) String title, @NotNull int authorId) {
+
         this.title = title;
+        this.authorId = authorId;
+
     }
 
-    public String getAuthorFirstName() {
-        return authorFirstName;
+    public int getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthorFirstName(String authorFirstName) {
-        this.authorFirstName = authorFirstName;
-    }
-
-    public String getAuthorLastName() {
-        return authorLastName;
-    }
-
-    public void setAuthorLastName(String authorLastName) {
-        this.authorLastName = authorLastName;
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
     }
 
     public String getTitle() {

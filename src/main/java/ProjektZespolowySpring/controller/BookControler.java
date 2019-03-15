@@ -1,5 +1,6 @@
 package ProjektZespolowySpring.controller;
 
+import ProjektZespolowySpring.model.author.AuthorRepository;
 import ProjektZespolowySpring.model.book.BookForm;
 import ProjektZespolowySpring.model.book.Book;
 import ProjektZespolowySpring.model.book.BookRepository;
@@ -15,10 +16,12 @@ import java.util.Optional;
 public class BookControler {
 
     private BookRepository bookRepository;
+    private AuthorRepository authorRepository;
 
     @Autowired
-    public BookControler(BookRepository bookRepository) {
+    public BookControler(BookRepository bookRepository, AuthorRepository authorRepository) {
         this.bookRepository = bookRepository;
+        this.authorRepository = authorRepository;
     }
 
     @PostMapping("/books")
@@ -27,7 +30,7 @@ public class BookControler {
             return "error";
         }
 
-        bookRepository.save(new Book(form.getTitle(), form.getAuthorFirstName(), form.getAuthorLastName()));
+        bookRepository.save(new Book(form.getTitle(), authorRepository.getOne(form.getAuthorId()) ));
         return "success";
     }
 
@@ -46,6 +49,8 @@ public class BookControler {
         bookRepository.deleteById(id);
         return "Delete book id[" +id +"]";
     }
+
+
 }
 
 

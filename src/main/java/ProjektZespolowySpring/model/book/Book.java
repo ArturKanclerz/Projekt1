@@ -1,32 +1,32 @@
 package ProjektZespolowySpring.model.book;
 
+import ProjektZespolowySpring.model.author.Author;
+
 import javax.persistence.*;
 
 @Entity
+@Table(name = "books")
 public class Book {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.TABLE)
     @Column(name = "ID")
     private int id;
 
     @Column(nullable = false)
-    private String authorFirstName;
-
-    @Column(nullable = false)
-    private  String authorLastName;
-
-    @Column(nullable = false)
     private String title;
+
+    @ManyToOne
+    @JoinColumn(name = "author")
+    private Author author;
 
     public Book(){
 
     }
 
-    public Book(String title, String authorFirstName, String authorLastName) {
+    public Book(String title, Author author) {
         this.title = title;
-        this.authorFirstName = authorFirstName;
-        this.authorLastName = authorLastName;
+        this.author = author;
     }
 
     public int getId() {
@@ -45,20 +45,12 @@ public class Book {
         this.title = title;
     }
 
-    public String getAuthorFirstName() {
-        return authorFirstName;
+    public Author getAuthor() {
+        return author;
     }
 
-    public void setAuthorFirstName(String authorFirstName) {
-        this.authorFirstName = authorFirstName;
-    }
-
-    public String getAuthorLastName() {
-        return authorLastName;
-    }
-
-    public void setAuthorLastName(String authorLastName) {
-        this.authorLastName = authorLastName;
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 }
 
