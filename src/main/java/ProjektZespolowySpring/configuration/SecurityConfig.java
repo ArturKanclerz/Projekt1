@@ -34,11 +34,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/borrows").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.GET, "/borrows", "/users").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/books", "/authors", "/borrows").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.PUT, "/books/**", "/authors/**", "/borrows/**").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/books/**", "/authors/**", "/borrows/**").hasAuthority("ADMIN")
-                .antMatchers("/register").permitAll()
+                .antMatchers(HttpMethod.POST, "/users").permitAll()
                 .anyRequest().authenticated().and().httpBasic();
     }
 
