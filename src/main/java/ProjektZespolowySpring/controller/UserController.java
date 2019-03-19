@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,6 +26,7 @@ import ProjektZespolowySpring.exception.NotFoundException;
 import ProjektZespolowySpring.model.user.User;
 import ProjektZespolowySpring.model.user.UserDTO;
 import ProjektZespolowySpring.model.user.UserRepository;
+import ProjektZespolowySpring.util.Util;
 
 @RestController
 @RequestMapping("/users")
@@ -53,7 +53,7 @@ public class UserController {
         UserDTO dto = userRepository.findById(username)
                 .map(user -> new UserDTO(user.getUsername(), user.getEmail()))
                 .orElseThrow(NotFoundException::new);
-        if (isAdminOrUser(authentication, username)) {
+        if (Util.isAdminOrUser(authentication, username)) {
             return dto;
         }
         throw new ForbiddenException();
@@ -62,7 +62,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> addUser(@RequestBody @Valid UserDTO dto, BindingResult result) {
         if (result.hasErrors()) {
-            throw new BadRequestException(errorMessage(result));
+            throw new BadRequestException(Util.getErrorMessage(result));
         } else if (userRepository.existsByUsernameOrEmailAllIgnoreCase(dto.getUsername(), dto.getEmail())) {
             throw new BadRequestException("username or email already exists");
         }
@@ -75,9 +75,9 @@ public class UserController {
                                         @RequestBody @Valid UserDTO dto, BindingResult result) {
         if (!userRepository.existsById(username)) {
             throw new NotFoundException();
-        } else if (isAdminOrUser(authentication, username)) {
+        } else if (Util.isAdminOrUser(authentication, username)) {
             if (result.hasErrors()) {
-                throw new BadRequestException(errorMessage(result));
+                throw new BadRequestException(Util.getErrorMessage(result));
             } else if (userRepository.existsByUsernameNotAndEmailAllIgnoreCase(username, dto.getEmail())) {
                 throw new BadRequestException("email already exists");
             } else {
@@ -92,29 +92,11 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@PathVariable String username, Authentication authentication) {
         if (!userRepository.existsById(username)) {
             throw new NotFoundException();
-        } else if (isAdminOrUser(authentication, username)) {
+        } else if (Util.isAdminOrUser(authentication, username)) {
             userRepository.deleteById(username);
             return ResponseEntity.ok().build();
         }
         throw new ForbiddenException();
-    }
-
-    private boolean isAdminOrUser(Authentication authentication, String username) {
-        return isAdmin(authentication) || isUser(authentication, username);
-    }
-
-    private boolean isAdmin(Authentication authentication) {
-        return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).anyMatch("ADMIN"::equals);
-    }
-
-    private boolean isUser(Authentication authentication, String username) {
-        return authentication.getName().equals(username);
-    }
-
-    private String errorMessage(BindingResult result) {
-        return result.getFieldErrors().stream()
-                .map(error -> error.getField() + ": " + error.getDefaultMessage())
-                .collect(Collectors.joining(", "));
     }
 
 }
