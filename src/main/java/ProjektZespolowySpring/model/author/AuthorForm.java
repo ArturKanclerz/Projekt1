@@ -18,6 +18,9 @@ public class AuthorForm {
         this.lastName = lastName;
     }
 
+    public AuthorForm() {
+    }
+
     public String getFirstName() {
         return firstName;
     }

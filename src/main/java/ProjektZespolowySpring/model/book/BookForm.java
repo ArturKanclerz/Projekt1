@@ -18,7 +18,9 @@ public class BookForm {
 
         this.title = title;
         this.authorId = authorId;
+    }
 
+    public BookForm() {
     }
 
     public int getAuthorId() {
