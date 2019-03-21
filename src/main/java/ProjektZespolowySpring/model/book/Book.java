@@ -1,6 +1,7 @@
 package ProjektZespolowySpring.model.book;
 
 import ProjektZespolowySpring.model.author.Author;
+import ProjektZespolowySpring.model.reservation.Reservation;
 
 import javax.persistence.*;
 
@@ -19,6 +20,7 @@ public class Book {
     @ManyToOne
     @JoinColumn(name = "author")
     private Author author;
+
 
     public Book(){
 
@@ -53,4 +55,3 @@ public class Book {
         this.author = author;
     }
 }
-

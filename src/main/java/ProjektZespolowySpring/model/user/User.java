@@ -1,15 +1,11 @@
 package ProjektZespolowySpring.model.user;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
 
 import ProjektZespolowySpring.model.authority.Authority;
+import ProjektZespolowySpring.model.reservation.Reservation;
 
 @Entity
 @Table(name = "users")
@@ -29,6 +25,10 @@ public class User {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Authority> authorities;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "userId")
+    private List<Reservation> reservations;
 
     public User() {
     }
@@ -86,3 +86,4 @@ public class User {
     }
 
 }
+
