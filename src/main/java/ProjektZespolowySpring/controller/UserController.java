@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,85 +17,99 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import ProjektZespolowySpring.exception.BadRequestException;
 import ProjektZespolowySpring.exception.ForbiddenException;
 import ProjektZespolowySpring.exception.NotFoundException;
-import ProjektZespolowySpring.model.user.User;
 import ProjektZespolowySpring.model.user.UserDTO;
-import ProjektZespolowySpring.model.user.UserRepository;
+import ProjektZespolowySpring.service.UserService;
 import ProjektZespolowySpring.util.Util;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
     @Autowired
-    public UserController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping
     public List<UserDTO> getAllUsers() {
-        return userRepository.findAll().stream()
-                .map(user -> new UserDTO(user.getUsername(), user.getEmail()))
-                .collect(Collectors.toList());
+        return userService.findAll();
     }
 
     @GetMapping("{username}")
     public UserDTO getUser(@PathVariable String username, Authentication authentication) {
-        UserDTO dto = userRepository.findById(username)
-                .map(user -> new UserDTO(user.getUsername(), user.getEmail()))
-                .orElseThrow(NotFoundException::new);
-        if (Util.isAdminOrUser(authentication, username)) {
-            return dto;
-        }
-        throw new ForbiddenException();
+        checkGetErrors(username, authentication);
+        return userService.findById(username).orElseThrow(NotFoundException::new);
     }
 
     @PostMapping
     public ResponseEntity<?> addUser(@RequestBody @Valid UserDTO dto, BindingResult result) {
-        if (result.hasErrors()) {
-            throw new BadRequestException(Util.getErrorMessage(result));
-        } else if (userRepository.existsByUsernameOrEmailAllIgnoreCase(dto.getUsername(), dto.getEmail())) {
-            throw new BadRequestException("username or email already exists");
-        }
-        userRepository.save(new User(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail()));
+        checkPostErrors(dto, result);
+        userService.add(dto);
         return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/users/" + dto.getUsername())).build();
     }
 
     @PutMapping("{username}")
     public ResponseEntity<?> updateUser(@PathVariable String username, Authentication authentication,
                                         @RequestBody @Valid UserDTO dto, BindingResult result) {
-        if (!userRepository.existsById(username)) {
-            throw new NotFoundException();
-        } else if (Util.isAdminOrUser(authentication, username)) {
-            if (result.hasErrors()) {
-                throw new BadRequestException(Util.getErrorMessage(result));
-            } else if (userRepository.existsByUsernameNotAndEmailAllIgnoreCase(username, dto.getEmail())) {
-                throw new BadRequestException("email already exists");
-            } else {
-                userRepository.save(new User(username, passwordEncoder.encode(dto.getPassword()), dto.getEmail()));
-                return ResponseEntity.ok().build();
-            }
-        }
-        throw new ForbiddenException();
+        checkPutErrors(username, authentication, dto, result);
+        userService.update(username, dto);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("{username}")
     public ResponseEntity<?> deleteUser(@PathVariable String username, Authentication authentication) {
-        if (!userRepository.existsById(username)) {
-            throw new NotFoundException();
-        } else if (Util.isAdminOrUser(authentication, username)) {
-            userRepository.deleteById(username);
-            return ResponseEntity.ok().build();
+        checkDeleteErrors(username, authentication);
+        userService.deleteById(username);
+        return ResponseEntity.ok().build();
+    }
+
+    private void checkGetErrors(String username, Authentication authentication) {
+        forbidden(username, authentication);
+    }
+
+    private void checkPostErrors(UserDTO dto, BindingResult result) {
+        badRequest(result);
+        if (userService.existsByUsernameOrEmailAllIgnoreCase(dto.getUsername(), dto.getEmail())) {
+            throw new BadRequestException("username or email already exists");
         }
-        throw new ForbiddenException();
+    }
+
+    private void checkPutErrors(String username, Authentication authentication, UserDTO dto, BindingResult result) {
+        forbidden(username, authentication);
+        notFound(username);
+        badRequest(result);
+        if (userService.existsByUsernameNotAndEmailAllIgnoreCase(username, dto.getEmail())) {
+            throw new BadRequestException("email already exists");
+        }
+    }
+
+    private void checkDeleteErrors(String username, Authentication authentication) {
+        forbidden(username, authentication);
+        notFound(username);
+    }
+
+    private void forbidden(String username, Authentication authentication) {
+        if (!Util.isAdminOrUser(authentication, username)) {
+            throw new ForbiddenException();
+        }
+    }
+
+    private void notFound(String username) {
+        if (!userService.existsById(username)) {
+            throw new NotFoundException();
+        }
+    }
+
+    private void badRequest(BindingResult result) {
+        if (result.hasErrors()) {
+            throw new BadRequestException(Util.getErrorMessage(result));
+        }
     }
 
 }
