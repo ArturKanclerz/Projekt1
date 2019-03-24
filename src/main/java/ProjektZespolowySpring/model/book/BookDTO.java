@@ -14,10 +14,14 @@ public class BookDTO {
     @NotNull
     private int authorId;
 
-    public BookDTO(@NotNull @Size(max = 255) String title, @NotNull int authorId) {
+    @NotNull
+    private int numberOfCopies;
+
+    public BookDTO(@NotNull @Size(max = 255) String title, @NotNull int authorId, @NotNull int numberOfCopies) {
 
         this.title = title;
         this.authorId = authorId;
+        this.numberOfCopies = numberOfCopies;
     }
 
     public BookDTO() {
@@ -37,5 +41,13 @@ public class BookDTO {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public int getNumberOfCopies() {
+        return numberOfCopies;
+    }
+
+    public void setNumberOfCopies(int numberOfCopies) {
+        this.numberOfCopies = numberOfCopies;
     }
 }

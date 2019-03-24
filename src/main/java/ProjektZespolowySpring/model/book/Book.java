@@ -21,13 +21,19 @@ public class Book {
     @JoinColumn(name = "author")
     private Author author;
 
+    @Column(nullable = false)
+    private int numberOfCopies;
+
+
+
     public Book(){
 
     }
 
-    public Book(String title, Author author) {
+    public Book(String title, Author author, int numberOfCopies) {
         this.title = title;
         this.author = author;
+        this.numberOfCopies = numberOfCopies;
     }
 
     public int getId() {
@@ -52,5 +58,13 @@ public class Book {
 
     public void setAuthor(Author author) {
         this.author = author;
+    }
+
+    public int getNumberOfCopies() {
+        return numberOfCopies;
+    }
+
+    public void setNumberOfCopies(int numberOfCopies) {
+        this.numberOfCopies = numberOfCopies;
     }
 }

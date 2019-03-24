@@ -6,6 +6,7 @@ import ProjektZespolowySpring.model.borrow.BorrowDTO;
 import ProjektZespolowySpring.model.borrow.BorrowRepository;
 
 import ProjektZespolowySpring.model.reservation.ReservationRepository;
+import ProjektZespolowySpring.service.BorrowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -16,13 +17,11 @@ import java.util.Optional;
 @RestController
 public class BorrowController {
 
-    private ReservationRepository reservationRepository;
-    private BorrowRepository borrowRepository;
+    private BorrowService borrowService;
 
     @Autowired
-    public BorrowController(ReservationRepository reservationRepository, BorrowRepository borrowRepository) {
-        this.reservationRepository = reservationRepository;
-        this.borrowRepository = borrowRepository;
+    public BorrowController(BorrowService borrowService) {
+        this.borrowService = borrowService;
     }
 
     @PostMapping("/borrows")
@@ -31,22 +30,22 @@ public class BorrowController {
             return "error";
         }
 
-        borrowRepository.save(new Borrow(reservationRepository.getOne(borrowDTO.getReservationId())));
+        borrowService.add(borrowDTO);
         return "success";
     }
     @GetMapping("/borrows")
     public List<Borrow> getBorrows(){
-        return borrowRepository.findAll();
+        return borrowService.findAll();
     }
 
     @GetMapping("/borrows/{id}")
-    public Optional<Borrow> getBook(@PathVariable int id){
-        return borrowRepository.findById(id);
+    public Borrow getBook(@PathVariable int id){
+        return borrowService.getOne(id);
     }
 
     @DeleteMapping("/borrows/{id}")
     public String deleteBorrow(@PathVariable int id){
-        borrowRepository.deleteById(id);
+        borrowService.deleteById(id);
         return "Delete borrow id: " +id;
     }
 
