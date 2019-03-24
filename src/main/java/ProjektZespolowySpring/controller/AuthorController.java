@@ -3,6 +3,7 @@ package ProjektZespolowySpring.controller;
 import ProjektZespolowySpring.model.author.Author;
 import ProjektZespolowySpring.model.author.AuthorDTO;
 import ProjektZespolowySpring.model.author.AuthorRepository;
+import ProjektZespolowySpring.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +15,11 @@ import java.util.Optional;
 @RestController
 public class AuthorController {
 
-    private AuthorRepository authorRepository;
+    private AuthorService authorService;
 
     @Autowired
-    public AuthorController(AuthorRepository authorRepository) {
-        this.authorRepository = authorRepository;
+    public AuthorController(AuthorService authorService) {
+        this.authorService = authorService;
     }
 
     @PostMapping("/authors")
@@ -27,23 +28,23 @@ public class AuthorController {
             return "error";
         }
 
-        authorRepository.save(new Author(form.getFirstName(), form.getLastName()));
+        authorService.add(new Author(form.getFirstName(), form.getLastName()));
         return "success";
     }
 
     @GetMapping("/authors")
     public List<Author> getAuthors(){
-        return authorRepository.findAll();
+        return authorService.findAll();
     }
 
     @GetMapping("/authors/{id}")
     public Optional<Author> getAuthor(@PathVariable int id){
-        return authorRepository.findById(id);
+        return authorService.findById(id);
     }
 
     @DeleteMapping("/author/{id}")
     public String deleteBook(@PathVariable int id){
-        authorRepository.deleteById(id);
+        authorService.deleteById(id);
         return "Delete autor id[" +id +"]";
     }
 
