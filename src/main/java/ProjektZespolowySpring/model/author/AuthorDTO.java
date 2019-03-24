@@ -3,7 +3,7 @@ package ProjektZespolowySpring.model.author;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class AuthorForm {
+public class AuthorDTO {
 
     @NotNull
     @Size(max=255)
@@ -13,12 +13,12 @@ public class AuthorForm {
     @Size(max = 255)
     private String lastName;
 
-    public AuthorForm(@NotNull @Size(max = 255) String firstName, @NotNull @Size(max = 255) String lastName) {
+    public AuthorDTO(@NotNull @Size(max = 255) String firstName, @NotNull @Size(max = 255) String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-    public AuthorForm() {
+    public AuthorDTO() {
     }
 
     public String getFirstName() {

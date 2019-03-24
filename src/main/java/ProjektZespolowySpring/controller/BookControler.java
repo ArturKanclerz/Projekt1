@@ -1,7 +1,7 @@
 package ProjektZespolowySpring.controller;
 
 import ProjektZespolowySpring.model.author.AuthorRepository;
-import ProjektZespolowySpring.model.book.BookForm;
+import ProjektZespolowySpring.model.book.BookDTO;
 import ProjektZespolowySpring.model.book.Book;
 import ProjektZespolowySpring.model.book.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class BookControler {
     }
 
     @PostMapping("/books")
-    public String addBook(@RequestBody @Valid BookForm form, BindingResult result) {
+    public String addBook(@RequestBody @Valid BookDTO form, BindingResult result) {
         if (result.hasErrors()) {
             return "error";
         }

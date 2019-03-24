@@ -5,7 +5,7 @@ import ProjektZespolowySpring.model.author.Author;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class BookForm {
+public class BookDTO {
 
     @NotNull
     @Size (max = 255)
@@ -14,13 +14,13 @@ public class BookForm {
     @NotNull
     private int authorId;
 
-    public BookForm(@NotNull @Size(max = 255) String title, @NotNull int authorId) {
+    public BookDTO(@NotNull @Size(max = 255) String title, @NotNull int authorId) {
 
         this.title = title;
         this.authorId = authorId;
     }
 
-    public BookForm() {
+    public BookDTO() {
     }
 
     public int getAuthorId() {

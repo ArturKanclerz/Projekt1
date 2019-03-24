@@ -1,7 +1,7 @@
 package ProjektZespolowySpring.controller;
 
 import ProjektZespolowySpring.model.author.Author;
-import ProjektZespolowySpring.model.author.AuthorForm;
+import ProjektZespolowySpring.model.author.AuthorDTO;
 import ProjektZespolowySpring.model.author.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -22,7 +22,7 @@ public class AuthorController {
     }
 
     @PostMapping("/authors")
-    public String addBook(@RequestBody @Valid AuthorForm form, BindingResult result) {
+    public String addBook(@RequestBody @Valid AuthorDTO form, BindingResult result) {
         if (result.hasErrors()) {
             return "error";
         }
