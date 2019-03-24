@@ -13,9 +13,11 @@ public class AuthorServiceImpl implements AuthorService {
 
     private AuthorRepository authorRepository;
 
+
     @Autowired
     public AuthorServiceImpl(AuthorRepository authorRepository) {
         this.authorRepository = authorRepository;
+
     }
 
     @Override
@@ -24,8 +26,8 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Optional<Author> findById(int id) {
-        return authorRepository.findById(id);
+    public Author getOne(int id) {
+        return authorRepository.getOne(id);
     }
 
     @Override

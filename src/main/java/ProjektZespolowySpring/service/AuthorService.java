@@ -10,7 +10,7 @@ public interface AuthorService {
 
     List<Author> findAll();
 
-    Optional<Author> findById(int id);
+    Author getOne(int id);
 
     void add(Author author);
 

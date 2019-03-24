@@ -21,7 +21,6 @@ public class Book {
     @JoinColumn(name = "author")
     private Author author;
 
-
     public Book(){
 
     }

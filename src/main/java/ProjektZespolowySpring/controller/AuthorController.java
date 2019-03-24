@@ -38,8 +38,8 @@ public class AuthorController {
     }
 
     @GetMapping("/authors/{id}")
-    public Optional<Author> getAuthor(@PathVariable int id){
-        return authorService.findById(id);
+    public Author getAuthor(@PathVariable int id){
+        return authorService.getOne(id);
     }
 
     @DeleteMapping("/author/{id}")

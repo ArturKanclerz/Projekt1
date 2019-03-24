@@ -4,6 +4,7 @@ import ProjektZespolowySpring.model.author.AuthorRepository;
 import ProjektZespolowySpring.model.book.BookDTO;
 import ProjektZespolowySpring.model.book.Book;
 import ProjektZespolowySpring.model.book.BookRepository;
+import ProjektZespolowySpring.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -15,38 +16,36 @@ import java.util.Optional;
 @RestController
 public class BookControler {
 
-    private BookRepository bookRepository;
-    private AuthorRepository authorRepository;
+    private BookService bookService;
 
     @Autowired
-    public BookControler(BookRepository bookRepository, AuthorRepository authorRepository) {
-        this.bookRepository = bookRepository;
-        this.authorRepository = authorRepository;
+    public BookControler(BookService bookService) {
+        this.bookService = bookService;
     }
 
     @PostMapping("/books")
-    public String addBook(@RequestBody @Valid BookDTO form, BindingResult result) {
+    public String addBook(@RequestBody @Valid BookDTO bookDTO, BindingResult result) {
         if (result.hasErrors()) {
             return "error";
         }
 
-        bookRepository.save(new Book(form.getTitle(), authorRepository.getOne(form.getAuthorId()) ));
+        bookService.add(bookDTO);
         return "success";
     }
 
     @GetMapping("/books")
     public List<Book> getBooks(){
-        return bookRepository.findAll();
+        return bookService.findAll();
     }
 
     @GetMapping("/books/{id}")
-    public Optional<Book> getBook(@PathVariable int id){
-        return bookRepository.findById(id);
+    public Book getBook(@PathVariable int id){
+        return bookService.getOne(id);
     }
 
     @DeleteMapping("/books/{id}")
     public String deleteBook(@PathVariable int id){
-        bookRepository.deleteById(id);
+        bookService.deleteById(id);
         return "Delete book id[" +id +"]";
     }
 
