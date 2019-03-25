@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.spi.RegisterableService;
+import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -36,7 +37,11 @@ public class BorrowServiceImpl implements BorrowService{
 
     @Override
     public void add(BorrowDTO borrowDTO) {
-        borrowRepository.save(new Borrow(reservationRepository.getOne(borrowDTO.getReservationId())));
+        Calendar borrowDate = Calendar.getInstance();
+        Calendar returnDate = Calendar.getInstance();
+        returnDate.add(Calendar.DATE, 14);
+
+        borrowRepository.save(new Borrow(reservationRepository.getOne(borrowDTO.getReservationId()), borrowDate, returnDate));
     }
 
     @Override
