@@ -1,6 +1,7 @@
 package ProjektZespolowySpring.service;
 
 import ProjektZespolowySpring.model.author.Author;
+import ProjektZespolowySpring.model.author.AuthorDTO;
 import ProjektZespolowySpring.model.user.User;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface AuthorService {
     void add(Author author);
 
     void deleteById(int id);
+
+    void update(int id, AuthorDTO authorDTO);
 }

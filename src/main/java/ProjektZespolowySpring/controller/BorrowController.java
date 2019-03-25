@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,6 +43,16 @@ public class BorrowController {
     @GetMapping("/borrows/{id}")
     public Borrow getBook(@PathVariable int id){
         return borrowService.getOne(id);
+    }
+
+    @PutMapping("/borrows/{id}")
+    public String updtadeAuthor(@PathVariable int id, @RequestBody @Valid BorrowDTO borrowDTO, BindingResult result){
+        if(result.hasErrors()){
+            return "error";
+        }
+
+        borrowService.update(id, borrowDTO);
+        return "success";
     }
 
     @DeleteMapping("/borrows/{id}")

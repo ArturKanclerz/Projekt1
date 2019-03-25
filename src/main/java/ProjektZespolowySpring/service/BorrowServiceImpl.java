@@ -48,4 +48,10 @@ public class BorrowServiceImpl implements BorrowService{
     public void deleteById(int id) {
         borrowRepository.deleteById(id);
     }
+
+    @Override
+    public void update(int id, BorrowDTO borrowDTO) {
+        Borrow borrow = borrowRepository.getOne(id);
+        borrow.setReservation(reservationRepository.getOne(borrowDTO.getReservationId()));
+    }
 }

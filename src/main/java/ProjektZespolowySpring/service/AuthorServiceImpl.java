@@ -1,6 +1,7 @@
 package ProjektZespolowySpring.service;
 
 import ProjektZespolowySpring.model.author.Author;
+import ProjektZespolowySpring.model.author.AuthorDTO;
 import ProjektZespolowySpring.model.author.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,5 +40,14 @@ public class AuthorServiceImpl implements AuthorService {
     public void deleteById(int id) {
         authorRepository.deleteById(id);
 
+    }
+
+    @Override
+    public void update(int id, AuthorDTO authorDTO) {
+        Author author = authorRepository.getOne(id);
+        author.setId(id);
+        author.setFirstName(authorDTO.getFirstName());
+        author.setLastName(authorDTO.getLastName());
+        authorRepository.save(author);
     }
 }

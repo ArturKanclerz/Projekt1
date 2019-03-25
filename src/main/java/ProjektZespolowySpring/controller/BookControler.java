@@ -43,6 +43,15 @@ public class BookControler {
         return bookService.getOne(id);
     }
 
+    @PutMapping("/books/{id}")
+    public String updtadeAuthor(@PathVariable int id, @RequestBody @Valid BookDTO bookDTO, BindingResult result){
+        if(result.hasErrors()){
+            return "error";
+        }
+
+        bookService.update(id, bookDTO);
+        return "success";
+    }
     @DeleteMapping("/books/{id}")
     public String deleteBook(@PathVariable int id){
         bookService.deleteById(id);

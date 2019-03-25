@@ -37,13 +37,25 @@ public class AuthorController {
         return authorService.findAll();
     }
 
+
+
     @GetMapping("/authors/{id}")
     public Author getAuthor(@PathVariable int id){
         return authorService.getOne(id);
     }
 
+    @PutMapping("/authors/{id}")
+    public String updtadeAuthor(@PathVariable int id, @RequestBody @Valid AuthorDTO authorDTO, BindingResult result){
+        if(result.hasErrors()){
+            return "error";
+        }
+
+        authorService.update(id, authorDTO);
+        return "success";
+    }
+
     @DeleteMapping("/author/{id}")
-    public String deleteBook(@PathVariable int id){
+    public String deleteAuthor(@PathVariable int id){
         authorService.deleteById(id);
         return "Delete autor id[" +id +"]";
     }

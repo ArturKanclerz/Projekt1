@@ -15,4 +15,6 @@ public interface BorrowService {
     void add(BorrowDTO borrowDTO);
 
     void deleteById(int id);
+
+    void update(int id, BorrowDTO borrowDTO);
 }
