@@ -27,6 +27,8 @@ public class Book {
     @Column(nullable = false)
     private int numberOfCopies;
 
+    private int numberOfBorrowedCopies;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "reservedBook")
     private List<Reservation> listOfReservations;
 
@@ -39,11 +41,14 @@ public class Book {
         this.title = title;
         this.author = author;
         this.numberOfCopies = numberOfCopies;
+        this.numberOfBorrowedCopies = 0;
     }
 
     public Book(int id){
         this.id = id;
     }
+
+
 
     public int getId() {
         return id;
@@ -83,5 +88,13 @@ public class Book {
 
     public void setListOfReservations(List<Reservation> listOfReservations) {
         this.listOfReservations = listOfReservations;
+    }
+
+    public int getNumberOfBorrowedCopies() {
+        return numberOfBorrowedCopies;
+    }
+
+    public void setNumberOfBorrowedCopies(int numberOfBorrowedCopies) {
+        this.numberOfBorrowedCopies = numberOfBorrowedCopies;
     }
 }

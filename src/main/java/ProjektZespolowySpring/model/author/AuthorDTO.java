@@ -13,9 +13,17 @@ public class AuthorDTO {
     @Size(max = 255)
     private String lastName;
 
+    private int id;
+
     public AuthorDTO(@NotNull @Size(max = 255) String firstName, @NotNull @Size(max = 255) String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public AuthorDTO(@NotNull @Size(max = 255) String firstName, @NotNull @Size(max = 255) String lastName, int id) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.id = id;
     }
 
     public AuthorDTO() {
@@ -35,5 +43,13 @@ public class AuthorDTO {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

@@ -11,6 +11,8 @@ public interface BookService {
 
     List<BookDTO> findAll();
 
+    Optional<BookDTO> findById(int id);
+
     Book getOne(int id);
 
     void add(BookDTO bookDTO);

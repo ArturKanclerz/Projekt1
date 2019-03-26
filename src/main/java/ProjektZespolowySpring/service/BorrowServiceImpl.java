@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import javax.imageio.spi.RegisterableService;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BorrowServiceImpl implements BorrowService{
@@ -26,8 +28,13 @@ public class BorrowServiceImpl implements BorrowService{
         this.reservationRepository = reservationRepository;
     }
     @Override
-    public List<Borrow> findAll() {
-        return borrowRepository.findAll();
+    public List<BorrowDTO> findAll() {
+        return borrowRepository.findAll().stream().map(borrow -> new BorrowDTO(borrow.getId(), borrow.getReservation().getId(), borrow.getBorrowDate(), borrow.getReturnDate())).collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<BorrowDTO> findById(int id){
+        return borrowRepository.findById(id).map(borrow -> new BorrowDTO(borrow.getId(), borrow.getReservation().getId(), borrow.getBorrowDate(), borrow.getReturnDate()));
     }
 
     @Override

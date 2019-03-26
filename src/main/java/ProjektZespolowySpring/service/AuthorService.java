@@ -9,9 +9,11 @@ import java.util.Optional;
 
 public interface AuthorService {
 
-    List<Author> findAll();
+    List<AuthorDTO> findAll();
 
     Author getOne(int id);
+
+    Optional<AuthorDTO> findById(int id);
 
     void add(Author author);
 

@@ -45,6 +45,7 @@ public class ReservationController {
                 new Book(dto.getBookId())));
         return "success";
     }
+
     @GetMapping("/reservations")
     public List<ReservationDTO> getReservations() {
         return reservationService.findAll();

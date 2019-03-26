@@ -33,15 +33,15 @@ public class AuthorController {
     }
 
     @GetMapping("/authors")
-    public List<Author> getAuthors(){
+    public List<AuthorDTO> getAuthors(){
         return authorService.findAll();
     }
 
 
 
     @GetMapping("/authors/{id}")
-    public Author getAuthor(@PathVariable int id){
-        return authorService.getOne(id);
+    public Optional<AuthorDTO> getAuthor(@PathVariable int id){
+        return authorService.findById(id);
     }
 
     @PutMapping("/authors/{id}")

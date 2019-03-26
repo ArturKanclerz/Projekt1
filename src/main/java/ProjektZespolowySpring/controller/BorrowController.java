@@ -36,13 +36,13 @@ public class BorrowController {
     }
 
     @GetMapping("/borrows")
-    public List<Borrow> getBorrows(){
+    public List<BorrowDTO> getBorrows(){
         return borrowService.findAll();
     }
 
     @GetMapping("/borrows/{id}")
-    public Borrow getBook(@PathVariable int id){
-        return borrowService.getOne(id);
+    public Optional<BorrowDTO> getBook(@PathVariable int id){
+        return borrowService.findById(id);
     }
 
     @PutMapping("/borrows/{id}")
