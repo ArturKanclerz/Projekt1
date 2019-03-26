@@ -5,5 +5,3 @@ values ('admin', '$2a$10$mXbNL1Ty5ZE/VQl/TvlLF.8pLSvF90UQlBtAGdDxenNcW1vrmIXDa',
 insert ignore into authorities (username, authority)
 values ('admin', 'ADMIN'),
        ('user', 'USER');
-
-insert ignore into authors()
