@@ -1,9 +1,11 @@
 package ProjektZespolowySpring.controller;
 
+import ProjektZespolowySpring.model.book.Book;
 import ProjektZespolowySpring.model.book.BookRepository;
 import ProjektZespolowySpring.model.reservation.Reservation;
 import ProjektZespolowySpring.model.reservation.ReservationDTO;
 import ProjektZespolowySpring.model.reservation.ReservationRepository;
+import ProjektZespolowySpring.model.user.User;
 import ProjektZespolowySpring.model.user.UserRepository;
 import ProjektZespolowySpring.service.BookService;
 import ProjektZespolowySpring.service.ReservationService;
@@ -23,16 +25,11 @@ import java.util.List;
 public class ReservationController {
 
     private ReservationService reservationService;
-    private BookService bookService;
-    private UserRepository userRepository;
-    private UserService userService;
 
 
     @Autowired
-    public ReservationController(BookService bookService, ReservationService reservationService, UserRepository userRepository) {
+    public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
-        this.bookService = bookService;
-        this.userRepository = userRepository;
 
     }
 
@@ -43,12 +40,11 @@ public class ReservationController {
         if(result.hasErrors()){
             return "error";
         }
-        reservationService.add(new Reservation(userRepository.getOne(dto.getUsername()),
+        reservationService.add(new Reservation(new User(dto.getUsername()),
                 Calendar.getInstance(),
-                bookService.getOne(dto.getBookId())));
+                new Book(dto.getBookId())));
         return "success";
     }
-
     @GetMapping("/reservations")
     public List<ReservationDTO> getReservations() {
         return reservationService.findAll();

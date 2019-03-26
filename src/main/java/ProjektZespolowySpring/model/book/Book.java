@@ -41,6 +41,10 @@ public class Book {
         this.numberOfCopies = numberOfCopies;
     }
 
+    public Book(int id){
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
