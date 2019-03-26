@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -24,13 +25,14 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> findAll() {
-        return bookRepository.findAll();
+    public List<BookDTO> findAll() {
+        return bookRepository.findAll().stream().map(book -> new BookDTO(book.getTitle(),book.getAuthor().getId(),book.getNumberOfCopies())).collect(Collectors.toList());
     }
 
     @Override
     public Book getOne(int id) {
         return bookRepository.getOne(id);
+
     }
 
     @Override

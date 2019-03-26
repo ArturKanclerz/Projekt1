@@ -27,7 +27,6 @@ public class User {
     private List<Authority> authorities;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "userId")
     private List<Reservation> reservations;
 
     public User() {

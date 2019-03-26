@@ -34,7 +34,7 @@ public class BookControler {
     }
 
     @GetMapping("/books")
-    public List<Book> getBooks(){
+    public List<BookDTO> getBooks(){
         return bookService.findAll();
     }
 
@@ -57,8 +57,6 @@ public class BookControler {
         bookService.deleteById(id);
         return "Delete book id[" +id +"]";
     }
-
-
 }
 
 

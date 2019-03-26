@@ -2,8 +2,11 @@ package ProjektZespolowySpring.model.book;
 
 import ProjektZespolowySpring.model.author.Author;
 import ProjektZespolowySpring.model.reservation.Reservation;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "books")
@@ -24,6 +27,8 @@ public class Book {
     @Column(nullable = false)
     private int numberOfCopies;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "reservedBook")
+    private List<Reservation> listOfReservations;
 
 
     public Book(){
@@ -66,5 +71,13 @@ public class Book {
 
     public void setNumberOfCopies(int numberOfCopies) {
         this.numberOfCopies = numberOfCopies;
+    }
+
+    public List<Reservation> getListOfReservations() {
+        return listOfReservations;
+    }
+
+    public void setListOfReservations(List<Reservation> listOfReservations) {
+        this.listOfReservations = listOfReservations;
     }
 }

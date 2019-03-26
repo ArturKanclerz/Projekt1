@@ -18,20 +18,20 @@ public class Reservation {
     @Column(name = "ID")
     private int id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "reservingUsername")
-//    private User reserving;
 
-    private String username;
+    @ManyToOne
+    @JoinColumn(name = "username")
+    private User username;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar reservationDate;
 
-    @OneToOne
-    @JoinColumn(name = "bookID")
+
+    @ManyToOne
+    @JoinColumn(name = "reservedBook")
     private Book reservedBook;
 
-    public Reservation(String reserving, Calendar reservationDate, Book reservedBook) {
+    public Reservation(User reserving, Calendar reservationDate, Book reservedBook) {
         this.username = reserving;
         this.reservationDate = reservationDate;
         this.reservedBook = reservedBook;
@@ -48,11 +48,11 @@ public class Reservation {
         this.id = id;
     }
 
-    public String getUsername() {
+    public User getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
+    public void setUsername(User username) {
         this.username = username;
     }
 
