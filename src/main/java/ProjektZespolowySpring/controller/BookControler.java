@@ -37,8 +37,8 @@ public class BookControler {
     @PostMapping("/books")
     public ResponseEntity<?> addBook(@RequestBody @Valid BookDTO bookDTO, BindingResult result) {
         checkPostErrors(bookDTO, result);
-        bookService.add(bookDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/books/" + bookDTO.getId())).build();
+        int id = bookService.add(bookDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/books/" + id)).build();
     }
 
     @GetMapping("/books")

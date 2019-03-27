@@ -33,8 +33,9 @@ public class AuthorController {
     @PostMapping("/authors")
     public ResponseEntity<?> addBook(@RequestBody @Valid AuthorDTO authorDTO, BindingResult result) {
         checkPostErrors(authorDTO, result);
-        authorService.add(new Author(authorDTO.getFirstName(), authorDTO.getLastName()));
-        return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/authors/" + authorDTO.getId())).build();
+        int id = authorService.add(authorDTO);
+        System.out.println(id);
+        return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/authors/" + id)).build();
     }
 
     @GetMapping("/authors")

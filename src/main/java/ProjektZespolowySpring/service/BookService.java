@@ -15,7 +15,7 @@ public interface BookService {
 
     Book getOne(int id);
 
-    void add(BookDTO bookDTO);
+    int add(BookDTO bookDTO);
 
     int getCountOfBookReservations(int bookID);
 

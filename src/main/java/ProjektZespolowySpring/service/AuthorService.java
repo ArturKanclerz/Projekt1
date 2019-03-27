@@ -15,7 +15,7 @@ public interface AuthorService {
 
     Optional<AuthorDTO> findById(int id);
 
-    void add(Author author);
+    int add(AuthorDTO authorDTO);
 
     void deleteById(int id);
 

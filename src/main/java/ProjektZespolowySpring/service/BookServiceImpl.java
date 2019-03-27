@@ -42,8 +42,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void add(BookDTO bookDTO) {
-        bookRepository.save(new Book(bookDTO.getTitle(), authorService.getOne(bookDTO.getAuthorId()), bookDTO.getNumberOfCopies()));
+    public int add(BookDTO bookDTO) {
+        return bookRepository.save(new Book(bookDTO.getTitle(), authorService.getOne(bookDTO.getAuthorId()), bookDTO.getNumberOfCopies())).getId();
 
     }
 
