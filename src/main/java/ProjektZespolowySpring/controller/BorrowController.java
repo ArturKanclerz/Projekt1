@@ -1,17 +1,23 @@
 package ProjektZespolowySpring.controller;
 
 
+import ProjektZespolowySpring.exception.BadRequestException;
+import ProjektZespolowySpring.exception.NotFoundException;
 import ProjektZespolowySpring.model.borrow.Borrow;
 import ProjektZespolowySpring.model.borrow.BorrowDTO;
 import ProjektZespolowySpring.model.borrow.BorrowRepository;
 
 import ProjektZespolowySpring.model.reservation.ReservationRepository;
 import ProjektZespolowySpring.service.BorrowService;
+import ProjektZespolowySpring.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,13 +32,10 @@ public class BorrowController {
     }
 
     @PostMapping("/borrows")
-    public String addBorrow(@RequestBody BorrowDTO borrowDTO, BindingResult result){
-        if(result.hasErrors()){
-            return "error";
-        }
-
+    public ResponseEntity<?> addBorrow(@RequestBody BorrowDTO borrowDTO, BindingResult result){
+        checkPostErrors(borrowDTO, result);
         borrowService.add(borrowDTO);
-        return "success";
+        return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/borrows/" + borrowDTO.getId())).build();
     }
 
     @GetMapping("/borrows")
@@ -41,24 +44,47 @@ public class BorrowController {
     }
 
     @GetMapping("/borrows/{id}")
-    public Optional<BorrowDTO> getBook(@PathVariable int id){
-        return borrowService.findById(id);
+    public BorrowDTO getBook(@PathVariable int id){
+        return borrowService.findById(id).orElseThrow(NotFoundException::new);
     }
 
     @PutMapping("/borrows/{id}")
-    public String updtadeAuthor(@PathVariable int id, @RequestBody @Valid BorrowDTO borrowDTO, BindingResult result){
-        if(result.hasErrors()){
-            return "error";
-        }
-
+    public ResponseEntity<?> updtadeAuthor(@PathVariable int id, @RequestBody @Valid BorrowDTO borrowDTO, BindingResult result){
+        checkPutErrors(borrowDTO, result, id);
         borrowService.update(id, borrowDTO);
-        return "success";
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/borrows/{id}")
-    public String deleteBorrow(@PathVariable int id){
+    public ResponseEntity<?> deleteBorrow(@PathVariable int id){
+        checkDeleteErrors(id);
         borrowService.deleteById(id);
-        return "Delete borrow id: " +id;
+        return ResponseEntity.ok().build();
+    }
+
+    private void checkPostErrors(BorrowDTO borrowkDTO, BindingResult result){
+        badRequest(result);
+    }
+
+    private void checkPutErrors(BorrowDTO borrowDTO, BindingResult result, int id){
+        badRequest(result);
+        notFound(id);
+    }
+
+    private void checkDeleteErrors(int id){
+        notFound(id);
+    }
+
+    private void notFound(int id) {
+        if (!borrowService.existsById(id)) {
+            throw new NotFoundException();
+        }
+    }
+
+    private void badRequest(BindingResult result) {
+        if (result.hasErrors()) {
+            throw new BadRequestException(Util.getErrorMessage(result));
+        }
     }
 
 }

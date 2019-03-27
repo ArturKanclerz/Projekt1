@@ -59,4 +59,14 @@ public class AuthorServiceImpl implements AuthorService {
         author.setLastName(authorDTO.getLastName());
         authorRepository.save(author);
     }
+
+    @Override
+    public boolean existsById(int id) {
+        return authorRepository.existsById(id);
+    }
+
+    @Override
+    public boolean existsByFirstNameAndLastName(String firstName, String lastName) {
+        return authorRepository.existsByFirstNameAndLastName(firstName, lastName);
+    }
 }

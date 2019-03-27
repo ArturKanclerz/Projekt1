@@ -21,4 +21,6 @@ public interface BorrowService {
     void deleteById(int id);
 
     void update(int id, BorrowDTO borrowDTO);
+
+    boolean existsById(int id);
 }

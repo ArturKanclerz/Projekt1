@@ -13,7 +13,7 @@ import java.util.Optional;
 public class Book {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue
     @Column(name = "ID")
     private int id;
 

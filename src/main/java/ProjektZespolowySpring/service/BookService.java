@@ -21,5 +21,7 @@ public interface BookService {
 
     void update(int id, BookDTO bookDTO);
 
+    boolean existsById(int id);
+
 
 }

@@ -1,14 +1,22 @@
 package ProjektZespolowySpring.controller;
 
+import ProjektZespolowySpring.exception.BadRequestException;
+import ProjektZespolowySpring.exception.ForbiddenException;
+import ProjektZespolowySpring.exception.NotFoundException;
 import ProjektZespolowySpring.model.author.Author;
 import ProjektZespolowySpring.model.author.AuthorDTO;
 import ProjektZespolowySpring.model.author.AuthorRepository;
 import ProjektZespolowySpring.service.AuthorService;
+import ProjektZespolowySpring.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,13 +31,10 @@ public class AuthorController {
     }
 
     @PostMapping("/authors")
-    public String addBook(@RequestBody @Valid AuthorDTO form, BindingResult result) {
-        if (result.hasErrors()) {
-            return "error";
-        }
-
-        authorService.add(new Author(form.getFirstName(), form.getLastName()));
-        return "success";
+    public ResponseEntity<?> addBook(@RequestBody @Valid AuthorDTO authorDTO, BindingResult result) {
+        checkPostErrors(authorDTO, result);
+        authorService.add(new Author(authorDTO.getFirstName(), authorDTO.getLastName()));
+        return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/authors/" + authorDTO.getId())).build();
     }
 
     @GetMapping("/authors")
@@ -40,24 +45,57 @@ public class AuthorController {
 
 
     @GetMapping("/authors/{id}")
-    public Optional<AuthorDTO> getAuthor(@PathVariable int id){
-        return authorService.findById(id);
+    public AuthorDTO getAuthor(@PathVariable int id){
+        return authorService.findById(id).orElseThrow(NotFoundException::new);
     }
 
     @PutMapping("/authors/{id}")
-    public String updtadeAuthor(@PathVariable int id, @RequestBody @Valid AuthorDTO authorDTO, BindingResult result){
-        if(result.hasErrors()){
-            return "error";
-        }
-
+    public ResponseEntity<?> updtadeAuthor(@PathVariable int id, @RequestBody @Valid AuthorDTO authorDTO, BindingResult result){
+        checkPutErrors(id, result, authorDTO);
         authorService.update(id, authorDTO);
-        return "success";
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/author/{id}")
-    public String deleteAuthor(@PathVariable int id){
+    public ResponseEntity<?> deleteAuthor(@PathVariable int id){
+        checkDeleteErrors(id);
         authorService.deleteById(id);
-        return "Delete autor id[" +id +"]";
+        return ResponseEntity.ok().build();
+    }
+
+    private void checkGetErrors(){
+
+    }
+
+    private void checkPostErrors(AuthorDTO authorDTO, BindingResult result){
+        badRequest(result);
+        if(authorService.existsByFirstNameAndLastName(authorDTO.getFirstName(), authorDTO.getLastName())){
+            throw new BadRequestException("Author is already exists");
+        }
+    }
+
+    private void checkPutErrors(int id, BindingResult result, AuthorDTO authorDTO){
+        badRequest(result);
+        notFound(id);
+        if(authorService.existsByFirstNameAndLastName(authorDTO.getFirstName(), authorDTO.getLastName())){
+            throw new BadRequestException("Author is already exists");
+        }
+    }
+
+    private void checkDeleteErrors(int id){
+        notFound(id);
+    }
+
+    private void notFound(int id) {
+        if (!authorService.existsById(id)) {
+            throw new NotFoundException();
+        }
+    }
+
+    private void badRequest(BindingResult result) {
+        if (result.hasErrors()) {
+            throw new BadRequestException(Util.getErrorMessage(result));
+        }
     }
 
 }

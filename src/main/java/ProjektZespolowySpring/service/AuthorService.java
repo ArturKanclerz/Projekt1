@@ -20,4 +20,9 @@ public interface AuthorService {
     void deleteById(int id);
 
     void update(int id, AuthorDTO authorDTO);
+
+    boolean existsById(int id);
+
+    boolean existsByFirstNameAndLastName(String firstName, String lastName);
+
 }

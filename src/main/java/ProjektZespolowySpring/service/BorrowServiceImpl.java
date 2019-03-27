@@ -61,4 +61,9 @@ public class BorrowServiceImpl implements BorrowService{
         Borrow borrow = borrowRepository.getOne(id);
         borrow.setReservation(reservationRepository.getOne(borrowDTO.getReservationId()));
     }
+
+    @Override
+    public boolean existsById(int id) {
+        return borrowRepository.existsById(id);
+    }
 }

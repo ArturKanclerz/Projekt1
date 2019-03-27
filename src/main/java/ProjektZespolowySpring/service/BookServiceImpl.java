@@ -61,5 +61,10 @@ public class BookServiceImpl implements BookService {
         book.setAuthor(authorService.getOne(id));
         bookRepository.save(book);
     }
+
+    @Override
+    public boolean existsById(int id) {
+        return bookRepository.existsById(id);
+    }
 }
 
