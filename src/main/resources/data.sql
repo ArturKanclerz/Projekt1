@@ -18,15 +18,14 @@ values (1, 'Henryk', 'Sienkiewicz'),
        (9, 'Jan', 'Brzechwa');
 
 insert ignore into books(id, number_of_borrowed_copies, number_of_copies, title, author)
-values (1001, 0, 7, 'Pan Tadeusz', 2),
-       (1002, 0, 4, 'Quo Vadis', 1),
-       (1003, 0, 3, 'Potop', 1),
-       (1004, 0, 5, 'Balladyna', 3),
-       (1005, 0, 4, 'Lalka', 8),
-       (1006, 0, 3, 'Wesele', 4),
-       (1007, 0, 6, 'Treny', 5),
-       (1008, 0, 6, 'Zniewolony umysł', 6),
-       (1009, 0, 5, 'Przedwiośnie', 7),
-       (1010, 0, 4, 'Lokomotywa', 9);
+values (1, 0, 7, 'Pan Tadeusz', 2),
+       (2, 0, 4, 'Quo Vadis', 1),
+       (3, 0, 3, 'Potop', 1),
+       (4, 0, 5, 'Balladyna', 3),
+       (5, 0, 4, 'Lalka', 8),
+       (6, 0, 3, 'Wesele', 4),
+       (7, 0, 6, 'Treny', 5),
+       (8, 0, 6, 'Zniewolony umysł', 6),
+       (9, 0, 5, 'Przedwiośnie', 7),
+       (10, 0, 4, 'Lokomotywa', 9);
 
-alter sequence hibernate_sequence restart with 10000;
