@@ -48,6 +48,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public int getCountOfBookReservations(int bookID) {
+
+        return bookRepository.getOne(bookID).getListOfReservations().size();
+    }
+
+    @Override
     public void deleteById(int id) {
         bookRepository.deleteById(id);
 
