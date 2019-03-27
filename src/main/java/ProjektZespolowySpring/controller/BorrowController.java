@@ -34,8 +34,8 @@ public class BorrowController {
     @PostMapping("/borrows")
     public ResponseEntity<?> addBorrow(@RequestBody BorrowDTO borrowDTO, BindingResult result){
         checkPostErrors(borrowDTO, result);
-        borrowService.add(borrowDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/borrows/" + borrowDTO.getId())).build();
+        int id = borrowService.add(borrowDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/borrows/" + id)).build();
     }
 
     @GetMapping("/borrows")

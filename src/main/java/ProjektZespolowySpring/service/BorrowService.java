@@ -16,7 +16,7 @@ public interface BorrowService {
 
     Borrow getOne(int id);
 
-    void add(BorrowDTO borrowDTO);
+    int add(BorrowDTO borrowDTO);
 
     void deleteById(int id);
 

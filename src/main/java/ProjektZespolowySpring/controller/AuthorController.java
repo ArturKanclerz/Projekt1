@@ -34,7 +34,6 @@ public class AuthorController {
     public ResponseEntity<?> addBook(@RequestBody @Valid AuthorDTO authorDTO, BindingResult result) {
         checkPostErrors(authorDTO, result);
         int id = authorService.add(authorDTO);
-        System.out.println(id);
         return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/authors/" + id)).build();
     }
 

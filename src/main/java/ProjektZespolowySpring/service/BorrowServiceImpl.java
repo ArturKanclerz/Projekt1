@@ -43,12 +43,12 @@ public class BorrowServiceImpl implements BorrowService{
     }
 
     @Override
-    public void add(BorrowDTO borrowDTO) {
+    public int add(BorrowDTO borrowDTO) {
         Calendar borrowDate = Calendar.getInstance();
         Calendar returnDate = Calendar.getInstance();
         returnDate.add(Calendar.DATE, 14);
 
-        borrowRepository.save(new Borrow(reservationRepository.getOne(borrowDTO.getReservationId()), borrowDate, returnDate));
+        return borrowRepository.save(new Borrow(reservationRepository.getOne(borrowDTO.getReservationId()), borrowDate, returnDate)).getId();
     }
 
     @Override
