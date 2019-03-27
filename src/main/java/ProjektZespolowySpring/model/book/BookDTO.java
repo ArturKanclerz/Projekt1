@@ -1,6 +1,7 @@
 package ProjektZespolowySpring.model.book;
 
 import ProjektZespolowySpring.model.author.Author;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -16,6 +17,8 @@ public class BookDTO {
     @NotNull
     private int authorId;
 
+    private Author author;
+
     @NotNull
     private int numberOfCopies;
 
@@ -29,10 +32,11 @@ public class BookDTO {
         this.numberOfCopies = numberOfCopies;
     }
 
-    public BookDTO(int id, @NotNull @Size(max = 255) String title, @NotNull int authorId, @NotNull int numberOfCopies, int numberOfBorrowedCopies) {
+    public BookDTO(int id, @NotNull @Size(max = 255) String title, Author author, @NotNull int authorId, @NotNull int numberOfCopies, int numberOfBorrowedCopies) {
         this.id = id;
         this.title = title;
         this.authorId = authorId;
+        this.author = author;
         this.numberOfCopies = numberOfCopies;
         this.numberOfBorrowedCopies = numberOfBorrowedCopies;
     }
@@ -78,5 +82,13 @@ public class BookDTO {
 
     public void setNumberOfBorrowedCopies(int numberOfBorrowedCopies) {
         this.numberOfBorrowedCopies = numberOfBorrowedCopies;
+    }
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 }

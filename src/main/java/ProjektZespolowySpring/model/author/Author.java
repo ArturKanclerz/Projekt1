@@ -11,14 +11,14 @@ import java.util.List;
 public class Author {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private int id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "firstname")
     private String firstName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "lastname")
     private String lastName;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "author")

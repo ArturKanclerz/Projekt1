@@ -27,12 +27,12 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookDTO> findAll() {
-        return bookRepository.findAll().stream().map(book -> new BookDTO(book.getId(), book.getTitle(),book.getAuthor().getId(),book.getNumberOfCopies(), book.getNumberOfBorrowedCopies())).collect(Collectors.toList());
+        return bookRepository.findAll().stream().map(book -> new BookDTO(book.getId(), book.getTitle(),book.getAuthor(), book.getAuthor().getId(), book.getNumberOfCopies(), book.getNumberOfBorrowedCopies())).collect(Collectors.toList());
     }
 
     @Override
     public Optional<BookDTO> findById(int id){
-        return bookRepository.findById(id).map(book -> new BookDTO(book.getId(), book.getTitle(), book.getAuthor().getId(), book.getNumberOfCopies(), book.getNumberOfBorrowedCopies()));
+        return bookRepository.findById(id).map(book -> new BookDTO(book.getId(), book.getTitle(), book.getAuthor(), book.getAuthor().getId(), book.getNumberOfCopies(), book.getNumberOfBorrowedCopies()));
     }
 
     @Override
