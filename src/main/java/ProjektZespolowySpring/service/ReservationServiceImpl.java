@@ -5,10 +5,12 @@ import ProjektZespolowySpring.model.reservation.Reservation;
 import ProjektZespolowySpring.model.reservation.ReservationDTO;
 import ProjektZespolowySpring.model.reservation.ReservationRepository;
 import ProjektZespolowySpring.model.user.User;
+import ProjektZespolowySpring.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
@@ -29,11 +31,22 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ReservationDTO> findAll() {
-        return reservationRepository.findAll().stream()
+    public List<ReservationDTO> findAll(Authentication authentication) {
+
+        List<ReservationDTO> list = reservationRepository.findAll().stream()
                 .map(reservation -> new ReservationDTO(reservation.getId(),reservation.getReservedBook().getId(),
                         reservation.getUsername().getUsername(), reservation.getReservationDate()))
                 .collect(Collectors.toList());
+        if(Util.isAdmin(authentication)){
+            return list;
+        }
+        List<ReservationDTO> output = new ArrayList<>();
+        for( ReservationDTO dto : list){
+            if(dto.getUsername().equals(authentication.getName())){
+                output.add(dto);
+            }
+        }
+        return output;
     }
 
     @Override

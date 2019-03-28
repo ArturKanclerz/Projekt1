@@ -42,8 +42,8 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    public List<ReservationDTO> getReservations() {
-        return reservationService.findAll();
+    public List<ReservationDTO> getReservations(Authentication authentication) {
+        return reservationService.findAll(authentication);
     }
 
     @GetMapping("/reservations/{id}")

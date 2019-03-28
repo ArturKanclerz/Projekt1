@@ -9,7 +9,8 @@ import java.util.Optional;
 
 public interface ReservationService {
 
-    List<ReservationDTO> findAll();
+    List<ReservationDTO> findAll(Authentication authentication);
+
     Reservation getOne(int id);
     void add(ReservationDTO dto, Authentication authentication);
 
