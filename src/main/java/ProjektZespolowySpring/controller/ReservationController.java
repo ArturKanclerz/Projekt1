@@ -1,26 +1,22 @@
 package ProjektZespolowySpring.controller;
 
-import ProjektZespolowySpring.model.authority.Authority;
+import ProjektZespolowySpring.exception.BadRequestException;
+import ProjektZespolowySpring.exception.NotFoundException;
 import ProjektZespolowySpring.model.book.Book;
-import ProjektZespolowySpring.model.book.BookRepository;
 import ProjektZespolowySpring.model.reservation.Reservation;
 import ProjektZespolowySpring.model.reservation.ReservationDTO;
-import ProjektZespolowySpring.model.reservation.ReservationRepository;
 import ProjektZespolowySpring.model.user.User;
-import ProjektZespolowySpring.model.user.UserRepository;
 import ProjektZespolowySpring.service.BookService;
 import ProjektZespolowySpring.service.ReservationService;
-import ProjektZespolowySpring.service.UserService;
 import ProjektZespolowySpring.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
-import java.util.Calendar;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -38,30 +34,70 @@ public class ReservationController {
 
 
     @PostMapping("/reservations")
-    public String addReservation(@RequestBody @Valid ReservationDTO dto, BindingResult result, Authentication authentication)
+    public ResponseEntity<?> addReservation(@RequestBody @Valid ReservationDTO dto, BindingResult result, Authentication authentication)
     {
-        if(result.hasErrors()){
-            return "error";
-        }
-        int countOfReservations = bookService.getCountOfBookReservations(dto.getBookId());
-        int copies = bookService.getOne(dto.getBookId()).getNumberOfCopies();
-        if(countOfReservations < copies){
-            reservationService.add(new Reservation(new User(authentication.getName()),
-                    Calendar.getInstance(),
-                    new Book(dto.getBookId())));
-            return "success";
-        } else {
-            return "this book is unavailable...";
-        }
-
+        checkPostErrors(dto,result);
+        reservationService.add(dto,authentication);
+        return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/reservations/")).build();
     }
 
     @GetMapping("/reservations")
     public List<ReservationDTO> getReservations() {
-
-
         return reservationService.findAll();
     }
 
+    @GetMapping("/reservations/{id}")
+    public ReservationDTO getReservation(@PathVariable int id)
+    {
+        return reservationService.findById(id).orElseThrow(NotFoundException::new);
+    }
 
+    @PutMapping("/reservations/{id}")
+    public ResponseEntity<?> updateReservation(@PathVariable int id, @RequestBody @Valid ReservationDTO dto, BindingResult result, Authentication authentication)
+    {
+        checkPutErrors(id,result,dto);
+        reservationService.update(id,dto,authentication);
+        return ResponseEntity.ok().build();
+    }
+
+
+    @DeleteMapping("/reservations/{id}")
+    public ResponseEntity<?> deleteAuthor(@PathVariable int id)
+    {
+        checkDeleteErrors(id);
+        reservationService.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    private void checkDeleteErrors(int id) {
+        notFound(id);
+    }
+
+    private void checkPostErrors(ReservationDTO dto, BindingResult result){
+        badRequest(result);
+        int countOfReservations = bookService.getCountOfBookReservations(dto.getBookId());
+        int copies = bookService.getOne(dto.getBookId()).getNumberOfCopies();
+        if(countOfReservations >= copies){
+            throw new BadRequestException("this book is unavailable...");
+        }
+    }
+
+    private void checkPutErrors(int id, BindingResult result, ReservationDTO dto)
+    {
+        badRequest(result);
+        notFound(id);
+        checkPostErrors(dto,result);
+    }
+
+    private void badRequest(BindingResult result){
+        if(result.hasErrors()){
+            throw new BadRequestException(Util.getErrorMessage(result));
+        }
+    }
+
+    private void notFound(int id){
+        if(!reservationService.existById(id)){
+            throw new NotFoundException();
+        }
+    }
 }

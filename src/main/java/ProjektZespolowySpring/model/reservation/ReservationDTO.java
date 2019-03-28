@@ -14,9 +14,8 @@ public class ReservationDTO {
 
     private Calendar reservationDate;
 
-    public ReservationDTO(@NotNull int bookId, @NotNull String username) {
+    public ReservationDTO(@NotNull int bookId) {
         this.bookId = bookId;
-        this.username = username;
     }
 
     public ReservationDTO(int id, @NotNull int bookId, String username, Calendar reservationDate) {
