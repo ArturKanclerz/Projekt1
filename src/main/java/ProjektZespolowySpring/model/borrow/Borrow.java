@@ -23,7 +23,7 @@ public class Borrow {
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar dateOfReturn;
 
-    @OneToOne
+    @OneToOne(orphanRemoval = true)
     @JoinColumn(name = "reservationId")
     private Reservation reservation;
 

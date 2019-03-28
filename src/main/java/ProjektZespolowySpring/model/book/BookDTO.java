@@ -21,8 +21,6 @@ public class BookDTO {
     @NotNull
     private int numberOfCopies;
 
-    private int numberOfBorrowedCopies;
-
     public BookDTO(@NotNull @Size(max = 255) String title, @NotNull int authorId, @NotNull int numberOfCopies) {
 
         this.title = title;
@@ -30,16 +28,16 @@ public class BookDTO {
         this.numberOfCopies = numberOfCopies;
     }
 
-    public BookDTO(int id, @NotNull @Size(max = 255) String title, AuthorDTO author, @NotNull int authorId, @NotNull int numberOfCopies, int numberOfBorrowedCopies) {
+    public BookDTO(int id, @NotNull @Size(max = 255) String title, AuthorDTO author, @NotNull int authorId, @NotNull int numberOfCopies) {
         this.id = id;
         this.title = title;
         this.authorId = authorId;
         this.author = author;
         this.numberOfCopies = numberOfCopies;
-        this.numberOfBorrowedCopies = numberOfBorrowedCopies;
     }
 
-    public BookDTO() {}
+    public BookDTO() {
+    }
 
     public int getAuthorId() {
         return authorId;
@@ -73,14 +71,6 @@ public class BookDTO {
         this.id = id;
     }
 
-    public int getNumberOfBorrowedCopies() {
-        return numberOfBorrowedCopies;
-    }
-
-    public void setNumberOfBorrowedCopies(int numberOfBorrowedCopies) {
-        this.numberOfBorrowedCopies = numberOfBorrowedCopies;
-    }
-
     public AuthorDTO getAuthor() {
         return author;
     }
@@ -88,4 +78,5 @@ public class BookDTO {
     public void setAuthor(AuthorDTO author) {
         this.author = author;
     }
+
 }

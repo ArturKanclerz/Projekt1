@@ -31,7 +31,7 @@ public class BorrowServiceImpl implements BorrowService {
 
     @Override
     public Optional<BorrowDTO> findById(int id) {
-        return borrowRepository.findById(id).map(borrow -> new BorrowDTO(borrow.getId(), borrow.getReservation().getId(), borrow.getBorrowDate(), borrow.getReturnDate(), borrow.getDateOfReturn() ));
+        return borrowRepository.findById(id).map(borrow -> new BorrowDTO(borrow.getId(), borrow.getReservation().getId(), borrow.getBorrowDate(), borrow.getReturnDate(), borrow.getDateOfReturn()));
     }
 
     @Override
@@ -56,8 +56,13 @@ public class BorrowServiceImpl implements BorrowService {
     @Override
     public void update(int id, BorrowDTO borrowDTO) {
         Borrow borrow = borrowRepository.getOne(id);
-        borrow.setReservation(reservationRepository.getOne(borrowDTO.getReservationId()));
+        borrow.setDateOfReturn(borrowDTO.getDateOfReturn());
+        borrow.setBorrowDate(borrowDTO.getBorrowDate());
         borrow.setReturnDate(borrowDTO.getReturnDate());
+        borrow.setReservation(reservationRepository.getOne(borrowDTO.getReservationId()));
+        if (borrowDTO.getReturnDate() != null) {
+            borrow.setReservation(null);
+        }
         borrowRepository.save(borrow);
     }
 

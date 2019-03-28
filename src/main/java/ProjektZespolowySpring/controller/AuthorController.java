@@ -49,7 +49,7 @@ public class AuthorController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/author/{id}")
+    @DeleteMapping("/authors/{id}")
     public ResponseEntity<?> deleteAuthor(@PathVariable int id) {
         checkDeleteErrors(id);
         authorService.deleteById(id);
