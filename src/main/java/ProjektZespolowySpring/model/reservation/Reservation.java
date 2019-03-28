@@ -6,15 +6,13 @@ import ProjektZespolowySpring.model.user.User;
 
 import javax.persistence.*;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "reservations")
 public class Reservation {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private int id;
 

@@ -3,7 +3,6 @@ package ProjektZespolowySpring.service;
 import java.util.List;
 import java.util.Optional;
 
-import ProjektZespolowySpring.model.user.User;
 import ProjektZespolowySpring.model.user.UserDTO;
 
 public interface UserService {

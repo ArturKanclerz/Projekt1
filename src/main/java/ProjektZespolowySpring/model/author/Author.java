@@ -1,6 +1,5 @@
 package ProjektZespolowySpring.model.author;
 
-import ProjektZespolowySpring.model.authority.Authority;
 import ProjektZespolowySpring.model.book.Book;
 
 import javax.persistence.*;
@@ -24,7 +23,7 @@ public class Author {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
     private List<Book> books;
 
-    public Author(){
+    public Author() {
 
     }
 
@@ -33,8 +32,9 @@ public class Author {
         this.lastName = lastName;
 
     }
+
     public Author(int id, String firstName, String lastName) {
-        this.id=id;
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
 
@@ -63,4 +63,13 @@ public class Author {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
 }

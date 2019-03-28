@@ -84,5 +84,13 @@ public class User {
         this.authorities = authorities;
     }
 
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+
 }
 

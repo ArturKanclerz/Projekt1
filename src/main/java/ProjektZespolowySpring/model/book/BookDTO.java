@@ -1,7 +1,6 @@
 package ProjektZespolowySpring.model.book;
 
 import ProjektZespolowySpring.model.author.Author;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -11,7 +10,7 @@ public class BookDTO {
     private int id;
 
     @NotNull
-    @Size (max = 255)
+    @Size(max = 255)
     private String title;
 
     @NotNull

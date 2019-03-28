@@ -1,7 +1,5 @@
 package ProjektZespolowySpring.service;
 
-import ProjektZespolowySpring.model.author.Author;
-import ProjektZespolowySpring.model.book.Book;
 import ProjektZespolowySpring.model.borrow.Borrow;
 import ProjektZespolowySpring.model.borrow.BorrowDTO;
 

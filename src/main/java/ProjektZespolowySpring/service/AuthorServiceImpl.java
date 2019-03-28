@@ -6,7 +6,6 @@ import ProjektZespolowySpring.model.author.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.OneToMany;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,7 +30,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Optional<AuthorDTO> findById(int id){
+    public Optional<AuthorDTO> findById(int id) {
         return authorRepository.findById(id).map(author -> new AuthorDTO(author.getFirstName(), author.getLastName(), author.getId()));
     }
 

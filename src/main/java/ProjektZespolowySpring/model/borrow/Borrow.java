@@ -10,7 +10,7 @@ import java.util.Calendar;
 public class Borrow {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private int id;
 
@@ -30,7 +30,8 @@ public class Borrow {
         this.returnDate = returnDate;
 
     }
-    public Borrow(){
+
+    public Borrow() {
 
     }
 

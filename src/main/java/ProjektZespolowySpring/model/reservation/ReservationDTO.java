@@ -1,11 +1,8 @@
 package ProjektZespolowySpring.model.reservation;
 
-import ProjektZespolowySpring.model.user.User;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Calendar;
-import java.util.Optional;
 
 public class ReservationDTO {
 

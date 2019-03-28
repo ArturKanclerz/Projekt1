@@ -2,11 +2,9 @@ package ProjektZespolowySpring.model.book;
 
 import ProjektZespolowySpring.model.author.Author;
 import ProjektZespolowySpring.model.reservation.Reservation;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Optional;
 
 @Entity
 @Table(name = "books")
@@ -34,7 +32,7 @@ public class Book {
     private List<Reservation> listOfReservations;
 
 
-    public Book(){
+    public Book() {
 
     }
 
@@ -45,10 +43,9 @@ public class Book {
         this.numberOfBorrowedCopies = 0;
     }
 
-    public Book(int id){
+    public Book(int id) {
         this.id = id;
     }
-
 
 
     public int getId() {

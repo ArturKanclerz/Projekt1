@@ -2,11 +2,7 @@ package ProjektZespolowySpring.controller;
 
 import ProjektZespolowySpring.exception.BadRequestException;
 import ProjektZespolowySpring.exception.NotFoundException;
-import ProjektZespolowySpring.model.author.Author;
-import ProjektZespolowySpring.model.author.AuthorRepository;
 import ProjektZespolowySpring.model.book.BookDTO;
-import ProjektZespolowySpring.model.book.Book;
-import ProjektZespolowySpring.model.book.BookRepository;
 import ProjektZespolowySpring.service.AuthorService;
 import ProjektZespolowySpring.service.BookService;
 import ProjektZespolowySpring.util.Util;
@@ -19,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class BookControler {
@@ -42,43 +37,46 @@ public class BookControler {
     }
 
     @GetMapping("/books")
-    public List<BookDTO> getBooks(){
+    public List<BookDTO> getBooks() {
         return bookService.findAll();
     }
 
     @GetMapping("/books/{id}")
-    public BookDTO getBook(@PathVariable int id){
+    public BookDTO getBook(@PathVariable int id) {
         return bookService.findById(id).orElseThrow(NotFoundException::new);
     }
 
     @PutMapping("/books/{id}")
-    public ResponseEntity<?> updtadeAuthor(@PathVariable int id, @RequestBody @Valid BookDTO bookDTO, BindingResult result){
+    public ResponseEntity<?> updtadeAuthor(@PathVariable int id, @RequestBody @Valid BookDTO bookDTO, BindingResult result) {
         checkPutErrors(bookDTO, result, id);
         bookService.update(id, bookDTO);
         return ResponseEntity.ok().build();
     }
+
     @DeleteMapping("/books/{id}")
-    public ResponseEntity<?> deleteBook(@PathVariable int id){
+    public ResponseEntity<?> deleteBook(@PathVariable int id) {
         checkDeleteErrors(id);
         bookService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
-    private void checkPostErrors(BookDTO bookDTO, BindingResult result){
+    private void checkPostErrors(BookDTO bookDTO, BindingResult result) {
         badRequest(result);
-        if(!authorService.existsById(bookDTO.getAuthorId())){
-            throw new BadRequestException("There is no author with the given id");}
+        if (!authorService.existsById(bookDTO.getAuthorId())) {
+            throw new BadRequestException("There is no author with the given id");
+        }
 
     }
 
-    private void checkPutErrors(BookDTO bookDTO, BindingResult result, int id){
+    private void checkPutErrors(BookDTO bookDTO, BindingResult result, int id) {
         badRequest(result);
         notFound(id);
-        if(!authorService.existsById(bookDTO.getAuthorId())){
+        if (!authorService.existsById(bookDTO.getAuthorId())) {
             throw new BadRequestException("There is no author with the given id");
         }
     }
-    private void checkDeleteErrors(int id){
+
+    private void checkDeleteErrors(int id) {
         notFound(id);
     }
 

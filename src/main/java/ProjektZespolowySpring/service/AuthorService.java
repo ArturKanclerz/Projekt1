@@ -2,7 +2,6 @@ package ProjektZespolowySpring.service;
 
 import ProjektZespolowySpring.model.author.Author;
 import ProjektZespolowySpring.model.author.AuthorDTO;
-import ProjektZespolowySpring.model.user.User;
 
 import java.util.List;
 import java.util.Optional;
