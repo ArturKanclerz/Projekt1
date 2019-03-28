@@ -1,5 +1,7 @@
 package ProjektZespolowySpring.service;
 
+import ProjektZespolowySpring.model.author.Author;
+import ProjektZespolowySpring.model.author.AuthorDTO;
 import ProjektZespolowySpring.model.book.Book;
 import ProjektZespolowySpring.model.book.BookDTO;
 import ProjektZespolowySpring.model.book.BookRepository;
@@ -24,36 +26,32 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookDTO> findAll() {
-        return bookRepository.findAll().stream().map(book -> new BookDTO(book.getId(), book.getTitle(), book.getAuthor(), book.getAuthor().getId(), book.getNumberOfCopies(), book.getNumberOfBorrowedCopies())).collect(Collectors.toList());
+        return bookRepository.findAll().stream().map(book -> new BookDTO(book.getId(), book.getTitle(), new AuthorDTO( book.getAuthor().getFirstName(), book.getAuthor().getLastName(), book.getAuthor().getId()), book.getAuthor().getId(), book.getNumberOfCopies(), book.getNumberOfBorrowedCopies())).collect(Collectors.toList());
     }
 
     @Override
     public Optional<BookDTO> findById(int id) {
-        return bookRepository.findById(id).map(book -> new BookDTO(book.getId(), book.getTitle(), book.getAuthor(), book.getAuthor().getId(), book.getNumberOfCopies(), book.getNumberOfBorrowedCopies()));
+        return bookRepository.findById(id).map(book -> new BookDTO(book.getId(), book.getTitle(), new AuthorDTO( book.getAuthor().getFirstName(), book.getAuthor().getLastName(), book.getAuthor().getId()), book.getAuthor().getId(), book.getNumberOfCopies(), book.getNumberOfBorrowedCopies()));
     }
 
     @Override
     public Book getOne(int id) {
         return bookRepository.getOne(id);
-
     }
 
     @Override
     public int add(BookDTO bookDTO) {
         return bookRepository.save(new Book(bookDTO.getTitle(), authorService.getOne(bookDTO.getAuthorId()), bookDTO.getNumberOfCopies())).getId();
-
     }
 
     @Override
     public int getCountOfBookReservations(int bookID) {
-
         return bookRepository.getOne(bookID).getListOfReservations().size();
     }
 
     @Override
     public void deleteById(int id) {
         bookRepository.deleteById(id);
-
     }
 
     @Override

@@ -26,8 +26,7 @@ public class AuthorDTO {
         this.id = id;
     }
 
-    public AuthorDTO() {
-    }
+    public AuthorDTO() {}
 
     public String getFirstName() {
         return firstName;
@@ -52,4 +51,5 @@ public class AuthorDTO {
     public void setId(int id) {
         this.id = id;
     }
+
 }

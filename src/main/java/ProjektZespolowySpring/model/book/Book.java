@@ -25,16 +25,12 @@ public class Book {
     @Column(nullable = false)
     private int numberOfCopies;
 
-
     private int numberOfBorrowedCopies;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "reservedBook")
     private List<Reservation> listOfReservations;
 
-
-    public Book() {
-
-    }
+    public Book() {}
 
     public Book(String title, Author author, int numberOfCopies) {
         this.title = title;
@@ -46,7 +42,6 @@ public class Book {
     public Book(int id) {
         this.id = id;
     }
-
 
     public int getId() {
         return id;

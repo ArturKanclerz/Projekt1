@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AuthorRepository extends JpaRepository<Author, Integer> {
 
-    boolean existsByFirstNameAndLastName(String firstName, String lastName);
+    boolean existsByFirstNameAndLastNameAllIgnoreCase(String firstName, String lastName);
 }

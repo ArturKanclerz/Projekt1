@@ -37,7 +37,6 @@ public class AuthorController {
         return authorService.findAll();
     }
 
-
     @GetMapping("/authors/{id}")
     public AuthorDTO getAuthor(@PathVariable int id) {
         return authorService.findById(id).orElseThrow(NotFoundException::new);
@@ -57,13 +56,9 @@ public class AuthorController {
         return ResponseEntity.ok().build();
     }
 
-    private void checkGetErrors() {
-
-    }
-
     private void checkPostErrors(AuthorDTO authorDTO, BindingResult result) {
         badRequest(result);
-        if (authorService.existsByFirstNameAndLastName(authorDTO.getFirstName(), authorDTO.getLastName())) {
+        if (authorService.existsByFirstNameAndLastNameAllIgnoreCase(authorDTO.getFirstName(), authorDTO.getLastName())) {
             throw new BadRequestException("Author is already exists");
         }
     }
@@ -71,7 +66,7 @@ public class AuthorController {
     private void checkPutErrors(int id, BindingResult result, AuthorDTO authorDTO) {
         badRequest(result);
         notFound(id);
-        if (authorService.existsByFirstNameAndLastName(authorDTO.getFirstName(), authorDTO.getLastName())) {
+        if (authorService.existsByFirstNameAndLastNameAllIgnoreCase(authorDTO.getFirstName(), authorDTO.getLastName())) {
             throw new BadRequestException("Author is already exists");
         }
     }

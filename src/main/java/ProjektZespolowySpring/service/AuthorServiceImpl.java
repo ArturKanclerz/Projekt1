@@ -15,11 +15,9 @@ public class AuthorServiceImpl implements AuthorService {
 
     private AuthorRepository authorRepository;
 
-
     @Autowired
     public AuthorServiceImpl(AuthorRepository authorRepository) {
         this.authorRepository = authorRepository;
-
     }
 
     @Override
@@ -42,13 +40,11 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public int add(AuthorDTO authorDTO) {
         return authorRepository.save(new Author(authorDTO.getFirstName(), authorDTO.getLastName())).getId();
-
     }
 
     @Override
     public void deleteById(int id) {
         authorRepository.deleteById(id);
-
     }
 
     @Override
@@ -66,7 +62,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public boolean existsByFirstNameAndLastName(String firstName, String lastName) {
-        return authorRepository.existsByFirstNameAndLastName(firstName, lastName);
+    public boolean existsByFirstNameAndLastNameAllIgnoreCase(String firstName, String lastName) {
+        return authorRepository.existsByFirstNameAndLastNameAllIgnoreCase(firstName, lastName);
     }
 }

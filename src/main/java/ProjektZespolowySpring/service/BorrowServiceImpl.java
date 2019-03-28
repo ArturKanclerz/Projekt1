@@ -26,12 +26,12 @@ public class BorrowServiceImpl implements BorrowService {
 
     @Override
     public List<BorrowDTO> findAll() {
-        return borrowRepository.findAll().stream().map(borrow -> new BorrowDTO(borrow.getId(), borrow.getReservation().getId(), borrow.getBorrowDate(), borrow.getReturnDate())).collect(Collectors.toList());
+        return borrowRepository.findAll().stream().map(borrow -> new BorrowDTO(borrow.getId(), borrow.getReservation().getId(), borrow.getBorrowDate(), borrow.getReturnDate(), borrow.getDateOfReturn())).collect(Collectors.toList());
     }
 
     @Override
     public Optional<BorrowDTO> findById(int id) {
-        return borrowRepository.findById(id).map(borrow -> new BorrowDTO(borrow.getId(), borrow.getReservation().getId(), borrow.getBorrowDate(), borrow.getReturnDate()));
+        return borrowRepository.findById(id).map(borrow -> new BorrowDTO(borrow.getId(), borrow.getReservation().getId(), borrow.getBorrowDate(), borrow.getReturnDate(), borrow.getDateOfReturn() ));
     }
 
     @Override
@@ -42,10 +42,10 @@ public class BorrowServiceImpl implements BorrowService {
     @Override
     public int add(BorrowDTO borrowDTO) {
         Calendar borrowDate = Calendar.getInstance();
-        Calendar returnDate = Calendar.getInstance();
-        returnDate.add(Calendar.DATE, 14);
+        Calendar dateOfReturn = Calendar.getInstance();
+        dateOfReturn.add(Calendar.DATE, 14);
 
-        return borrowRepository.save(new Borrow(reservationRepository.getOne(borrowDTO.getReservationId()), borrowDate, returnDate)).getId();
+        return borrowRepository.save(new Borrow(reservationRepository.getOne(borrowDTO.getReservationId()), borrowDate, null, dateOfReturn)).getId();
     }
 
     @Override
@@ -57,6 +57,8 @@ public class BorrowServiceImpl implements BorrowService {
     public void update(int id, BorrowDTO borrowDTO) {
         Borrow borrow = borrowRepository.getOne(id);
         borrow.setReservation(reservationRepository.getOne(borrowDTO.getReservationId()));
+        borrow.setReturnDate(borrowDTO.getReturnDate());
+        borrowRepository.save(borrow);
     }
 
     @Override

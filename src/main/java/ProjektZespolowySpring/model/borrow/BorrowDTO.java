@@ -14,21 +14,21 @@ public class BorrowDTO {
 
     private Calendar returnDate;
 
+    private Calendar dateOfReturn;
 
     public BorrowDTO(@NotNull int reservationId) {
         this.reservationId = reservationId;
     }
 
-    public BorrowDTO(int id, @NotNull int reservationId, Calendar borrowDate, Calendar returnDate) {
+    public BorrowDTO(int id, @NotNull int reservationId, Calendar borrowDate, Calendar returnDate, Calendar dateOfReturn) {
         this.id = id;
         this.reservationId = reservationId;
         this.borrowDate = borrowDate;
         this.returnDate = returnDate;
+        this.dateOfReturn = dateOfReturn;
     }
 
-    public BorrowDTO(){
-
-    }
+    public BorrowDTO(){}
 
     public int getReservationId() {
         return reservationId;
@@ -60,5 +60,13 @@ public class BorrowDTO {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Calendar getDateOfReturn() {
+        return dateOfReturn;
+    }
+
+    public void setDateOfReturn(Calendar dateOfReturn) {
+        this.dateOfReturn = dateOfReturn;
     }
 }

@@ -1,6 +1,5 @@
 package ProjektZespolowySpring.controller;
 
-
 import ProjektZespolowySpring.exception.BadRequestException;
 import ProjektZespolowySpring.exception.NotFoundException;
 import ProjektZespolowySpring.model.borrow.BorrowDTO;
@@ -40,12 +39,12 @@ public class BorrowController {
     }
 
     @GetMapping("/borrows/{id}")
-    public BorrowDTO getBook(@PathVariable int id) {
+    public BorrowDTO getBorrow(@PathVariable int id) {
         return borrowService.findById(id).orElseThrow(NotFoundException::new);
     }
 
     @PutMapping("/borrows/{id}")
-    public ResponseEntity<?> updtadeAuthor(@PathVariable int id, @RequestBody @Valid BorrowDTO borrowDTO, BindingResult result) {
+    public ResponseEntity<?> updtadeBorrow(@PathVariable int id, @RequestBody @Valid BorrowDTO borrowDTO, BindingResult result) {
         checkPutErrors(borrowDTO, result, id);
         borrowService.update(id, borrowDTO);
         return ResponseEntity.ok().build();
@@ -82,5 +81,4 @@ public class BorrowController {
             throw new BadRequestException(Util.getErrorMessage(result));
         }
     }
-
 }

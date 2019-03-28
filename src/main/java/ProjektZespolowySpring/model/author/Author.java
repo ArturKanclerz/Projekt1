@@ -23,21 +23,17 @@ public class Author {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
     private List<Book> books;
 
-    public Author() {
-
-    }
+    public Author() {}
 
     public Author(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-
     }
 
     public Author(int id, String firstName, String lastName) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-
     }
 
     public int getId() {
@@ -71,5 +67,4 @@ public class Author {
     public void setBooks(List<Book> books) {
         this.books = books;
     }
-
 }

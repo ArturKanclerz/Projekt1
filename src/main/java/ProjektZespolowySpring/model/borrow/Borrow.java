@@ -20,20 +20,22 @@ public class Borrow {
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar returnDate;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Calendar dateOfReturn;
+
     @OneToOne
     @JoinColumn(name = "reservationId")
     private Reservation reservation;
 
-    public Borrow(Reservation reservation, Calendar borrowDate, Calendar returnDate) {
+    public Borrow(Reservation reservation, Calendar borrowDate, Calendar returnDate, Calendar dateOfReturn) {
         this.reservation = reservation;
         this.borrowDate = borrowDate;
         this.returnDate = returnDate;
+        this.dateOfReturn = dateOfReturn;
 
     }
 
-    public Borrow() {
-
-    }
+    public Borrow() {}
 
     public int getId() {
         return id;
@@ -65,5 +67,13 @@ public class Borrow {
 
     public void setReturnDate(Calendar returnDate) {
         this.returnDate = returnDate;
+    }
+
+    public Calendar getDateOfReturn() {
+        return dateOfReturn;
+    }
+
+    public void setDateOfReturn(Calendar dateOfReturn) {
+        this.dateOfReturn = dateOfReturn;
     }
 }

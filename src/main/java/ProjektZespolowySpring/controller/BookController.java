@@ -17,16 +17,15 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-public class BookControler {
+public class BookController {
 
     private BookService bookService;
     private AuthorService authorService;
 
     @Autowired
-    public BookControler(BookService bookService, AuthorService authorService) {
+    public BookController(BookService bookService, AuthorService authorService) {
         this.bookService = bookService;
         this.authorService = authorService;
-
     }
 
     @PostMapping("/books")
@@ -47,7 +46,7 @@ public class BookControler {
     }
 
     @PutMapping("/books/{id}")
-    public ResponseEntity<?> updtadeAuthor(@PathVariable int id, @RequestBody @Valid BookDTO bookDTO, BindingResult result) {
+    public ResponseEntity<?> updateBook(@PathVariable int id, @RequestBody @Valid BookDTO bookDTO, BindingResult result) {
         checkPutErrors(bookDTO, result, id);
         bookService.update(id, bookDTO);
         return ResponseEntity.ok().build();
@@ -65,7 +64,6 @@ public class BookControler {
         if (!authorService.existsById(bookDTO.getAuthorId())) {
             throw new BadRequestException("There is no author with the given id");
         }
-
     }
 
     private void checkPutErrors(BookDTO bookDTO, BindingResult result, int id) {

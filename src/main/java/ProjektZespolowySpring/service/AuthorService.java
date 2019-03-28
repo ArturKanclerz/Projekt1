@@ -22,6 +22,6 @@ public interface AuthorService {
 
     boolean existsById(int id);
 
-    boolean existsByFirstNameAndLastName(String firstName, String lastName);
+    boolean existsByFirstNameAndLastNameAllIgnoreCase(String firstName, String lastName);
 
 }
