@@ -9,6 +9,7 @@ import ProjektZespolowySpring.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jmx.export.UnableToRegisterMBeanException;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class ReservationController {
     @PostMapping("/reservations")
     public ResponseEntity<?> addReservation(@RequestBody @Valid ReservationDTO dto, BindingResult result, Authentication authentication)
     {
-        checkPostErrors(dto,result);
+        checkPostErrors(dto,result, authentication);
         reservationService.add(dto,authentication);
         return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/reservations/")).build();
     }
@@ -74,13 +75,10 @@ public class ReservationController {
             badUser(reservationId,authentication);
     }
 
-    private void checkPostErrors(ReservationDTO dto, BindingResult result){
+    private void checkPostErrors(ReservationDTO dto, BindingResult result, Authentication authentication){
         badRequest(result);
-        int countOfReservations = bookService.getCountOfBookReservations(dto.getBookId());
-        int copies = bookService.getOne(dto.getBookId()).getNumberOfCopies();
-        if(countOfReservations >= copies){
-            throw new BadRequestException("this book is unavailable...");
-        }
+        unavailableBook(dto.getBookId());
+        anotherCopyOfBook(dto.getBookId(),authentication);
     }
 
     private void checkPutErrors(int id, BindingResult result, ReservationDTO dto, Authentication authentication)
@@ -89,13 +87,34 @@ public class ReservationController {
         notFound(id);
         if( !Util.isAdmin(authentication) )
             badUser(id, authentication);
-        checkPostErrors(dto,result);
+        checkPostErrors(dto,result,authentication);
     }
 
     private void checkDeleteErrors(int id, Authentication authentication) {
         notFound(id);
         if( !Util.isAdmin(authentication) )
             badUser(id, authentication);
+    }
+
+    private void anotherCopyOfBook(int bookId, Authentication authentication)
+    {
+        if( !Util.isAdmin(authentication) ) {
+            List<ReservationDTO> listOfReservations = reservationService.findAll(authentication);
+            for (ReservationDTO dto : listOfReservations) {
+                if (dto.getBookId() == bookId) {
+                    throw new BadRequestException("You've already reserved this book.");
+                }
+            }
+        }
+    }
+
+    private void unavailableBook(int id)
+    {
+        int countOfReservations = bookService.getCountOfBookReservations(id);
+        int copies = bookService.getOne(id).getNumberOfCopies();
+        if(countOfReservations >= copies){
+            throw new BadRequestException("this book is unavailable...");
+        }
     }
 
     private void badUser(int reservationId, Authentication authentication)
