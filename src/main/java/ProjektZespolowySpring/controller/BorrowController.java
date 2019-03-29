@@ -62,17 +62,15 @@ public class BorrowController {
 
     private void checkPostErrors(BorrowDTO borrowDTO, BindingResult result) {
         badRequest(result);
+        sameReservation(borrowDTO.getReservationId());
         if (!reservationService.existById(borrowDTO.getReservationId())) {
-            throw new BadRequestException("this reservation does not exist");
+            throw new BadRequestException("This reservation does not exist");
         }
     }
 
     private void checkPutErrors(BorrowDTO borrowDTO, BindingResult result, int id) {
         badRequest(result);
         notFound(id);
-        if (!reservationService.existById(borrowDTO.getReservationId())) {
-            throw new BadRequestException("this reservation does not exist");
-        }
     }
 
     private void checkDeleteErrors(int id) {
@@ -88,6 +86,15 @@ public class BorrowController {
     private void badRequest(BindingResult result) {
         if (result.hasErrors()) {
             throw new BadRequestException(Util.getErrorMessage(result));
+        }
+    }
+
+    private void sameReservation(int reservationId){
+        List<BorrowDTO> listOfBorrows = borrowService.findAll();
+        for (BorrowDTO dto : listOfBorrows) {
+            if (dto.getReservationId() == reservationId) {
+                throw new BadRequestException("This reservation is completed");
+            }
         }
     }
 }

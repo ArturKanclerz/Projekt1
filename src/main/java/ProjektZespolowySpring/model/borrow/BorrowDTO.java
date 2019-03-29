@@ -10,19 +10,23 @@ public class BorrowDTO {
     @NotNull
     private int reservationId;
 
+    private String username;
+
     private Calendar borrowDate;
 
     private Calendar returnDate;
 
     private Calendar dateOfReturn;
 
+
     public BorrowDTO(@NotNull int reservationId) {
         this.reservationId = reservationId;
     }
 
-    public BorrowDTO(int id, @NotNull int reservationId, Calendar borrowDate, Calendar returnDate, Calendar dateOfReturn) {
+    public BorrowDTO(int id, @NotNull int reservationId, String username, Calendar borrowDate, Calendar returnDate, Calendar dateOfReturn) {
         this.id = id;
         this.reservationId = reservationId;
+        this.username = username;
         this.borrowDate = borrowDate;
         this.returnDate = returnDate;
         this.dateOfReturn = dateOfReturn;
@@ -68,5 +72,13 @@ public class BorrowDTO {
 
     public void setDateOfReturn(Calendar dateOfReturn) {
         this.dateOfReturn = dateOfReturn;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

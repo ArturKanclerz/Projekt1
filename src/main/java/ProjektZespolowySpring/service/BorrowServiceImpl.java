@@ -1,5 +1,6 @@
 package ProjektZespolowySpring.service;
 
+import ProjektZespolowySpring.exception.BadRequestException;
 import ProjektZespolowySpring.model.borrow.Borrow;
 import ProjektZespolowySpring.model.borrow.BorrowDTO;
 import ProjektZespolowySpring.model.borrow.BorrowRepository;
@@ -18,24 +19,26 @@ public class BorrowServiceImpl implements BorrowService {
 
     private BorrowRepository borrowRepository;
     private ReservationRepository reservationRepository;
+    private ReservationService reservationService;
 
     @Autowired
-    public BorrowServiceImpl(BorrowRepository borrowRepository, ReservationRepository reservationRepository) {
+    public BorrowServiceImpl(BorrowRepository borrowRepository, ReservationRepository reservationRepository, ReservationService reservationService) {
         this.borrowRepository = borrowRepository;
         this.reservationRepository = reservationRepository;
+        this.reservationService = reservationService;
     }
 
     @Override
     public List<BorrowDTO> findAll() {
         return borrowRepository.findAll().stream().map(borrow -> new BorrowDTO(borrow.getId(),
-                Optional.ofNullable(borrow.getReservation()).map(Reservation::getId).orElse(-1),
+                Optional.ofNullable(borrow.getReservation()).map(Reservation::getId).orElse(-1), borrow.getUsername(),
                 borrow.getBorrowDate(), borrow.getReturnDate(), borrow.getDateOfReturn())).collect(Collectors.toList());
     }
 
     @Override
     public Optional<BorrowDTO> findById(int id) {
         return borrowRepository.findById(id).map(borrow -> new BorrowDTO(borrow.getId(),
-                Optional.ofNullable(borrow.getReservation()).map(Reservation::getId).orElse(-1),
+                Optional.ofNullable(borrow.getReservation()).map(Reservation::getId).orElse(-1), borrow.getUsername(),
                 borrow.getBorrowDate(), borrow.getReturnDate(), borrow.getDateOfReturn()));
     }
 
@@ -50,7 +53,7 @@ public class BorrowServiceImpl implements BorrowService {
         Calendar dateOfReturn = Calendar.getInstance();
         dateOfReturn.add(Calendar.DATE, 14);
 
-        return borrowRepository.save(new Borrow(reservationRepository.getOne(borrowDTO.getReservationId()), borrowDate, null, dateOfReturn)).getId();
+        return borrowRepository.save(new Borrow(reservationRepository.getOne(borrowDTO.getReservationId()), borrowDate, null, dateOfReturn, reservationRepository.getOne(borrowDTO.getReservationId()).getUsername().getUsername())).getId();
     }
 
     @Override
@@ -61,10 +64,24 @@ public class BorrowServiceImpl implements BorrowService {
     @Override
     public void update(int id, BorrowDTO borrowDTO) {
         Borrow borrow = borrowRepository.getOne(id);
-        borrow.setDateOfReturn(borrowDTO.getDateOfReturn());
-        borrow.setBorrowDate(borrowDTO.getBorrowDate());
+        if(borrowDTO.getBorrowDate() != null){
+            borrow.setBorrowDate(borrowDTO.getBorrowDate());
+        }
+
+        if(borrowDTO.getDateOfReturn() != null){
+            borrow.setDateOfReturn(borrowDTO.getDateOfReturn());
+        }
+
         borrow.setReturnDate(borrowDTO.getReturnDate());
-        borrow.setReservation(reservationRepository.getOne(borrowDTO.getReservationId()));
+
+        if(borrowDTO.getReturnDate() == null){
+            if (!reservationService.existById(borrowDTO.getReservationId())) {
+                throw new BadRequestException("This reservation does not exist");
+            }
+            borrow.setReservation(reservationRepository.getOne(borrowDTO.getReservationId()));
+            borrow.setUsername(reservationRepository.getOne(borrowDTO.getReservationId()).getUsername().getUsername());
+        }
+
         if (borrowDTO.getReturnDate() != null) {
             borrow.setReservation(null);
         }

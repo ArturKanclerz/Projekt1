@@ -27,11 +27,14 @@ public class Borrow {
     @JoinColumn(name = "reservationId")
     private Reservation reservation;
 
-    public Borrow(Reservation reservation, Calendar borrowDate, Calendar returnDate, Calendar dateOfReturn) {
+    private String username;
+
+    public Borrow(Reservation reservation, Calendar borrowDate, Calendar returnDate, Calendar dateOfReturn, String username) {
         this.reservation = reservation;
         this.borrowDate = borrowDate;
         this.returnDate = returnDate;
         this.dateOfReturn = dateOfReturn;
+        this.username = username;
 
     }
 
@@ -75,5 +78,13 @@ public class Borrow {
 
     public void setDateOfReturn(Calendar dateOfReturn) {
         this.dateOfReturn = dateOfReturn;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
