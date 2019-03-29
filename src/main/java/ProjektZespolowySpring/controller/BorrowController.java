@@ -62,10 +62,10 @@ public class BorrowController {
 
     private void checkPostErrors(BorrowDTO borrowDTO, BindingResult result) {
         badRequest(result);
-        sameReservation(borrowDTO.getReservationId());
         if (!reservationService.existById(borrowDTO.getReservationId())) {
             throw new BadRequestException("This reservation does not exist");
         }
+        sameReservation(borrowDTO.getReservationId());
     }
 
     private void checkPutErrors(BorrowDTO borrowDTO, BindingResult result, int id) {
@@ -89,11 +89,11 @@ public class BorrowController {
         }
     }
 
-    private void sameReservation(int reservationId){
+    private void sameReservation(int reservationId) {
         List<BorrowDTO> listOfBorrows = borrowService.findAll();
         for (BorrowDTO dto : listOfBorrows) {
             if (dto.getReservationId() == reservationId) {
-                throw new BadRequestException("This reservation is completed");
+                throw new BadRequestException("This book is borrowed");
             }
         }
     }

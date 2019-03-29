@@ -1,6 +1,5 @@
 package ProjektZespolowySpring.service;
 
-import ProjektZespolowySpring.exception.BadRequestException;
 import ProjektZespolowySpring.model.borrow.Borrow;
 import ProjektZespolowySpring.model.borrow.BorrowDTO;
 import ProjektZespolowySpring.model.borrow.BorrowRepository;
@@ -19,13 +18,11 @@ public class BorrowServiceImpl implements BorrowService {
 
     private BorrowRepository borrowRepository;
     private ReservationRepository reservationRepository;
-    private ReservationService reservationService;
 
     @Autowired
-    public BorrowServiceImpl(BorrowRepository borrowRepository, ReservationRepository reservationRepository, ReservationService reservationService) {
+    public BorrowServiceImpl(BorrowRepository borrowRepository, ReservationRepository reservationRepository) {
         this.borrowRepository = borrowRepository;
         this.reservationRepository = reservationRepository;
-        this.reservationService = reservationService;
     }
 
     @Override
@@ -64,25 +61,14 @@ public class BorrowServiceImpl implements BorrowService {
     @Override
     public void update(int id, BorrowDTO borrowDTO) {
         Borrow borrow = borrowRepository.getOne(id);
-        if(borrowDTO.getBorrowDate() != null){
+        if (borrowDTO.getBorrowDate() != null) {
             borrow.setBorrowDate(borrowDTO.getBorrowDate());
         }
-
-        if(borrowDTO.getDateOfReturn() != null){
+        if (borrowDTO.getDateOfReturn() != null) {
             borrow.setDateOfReturn(borrowDTO.getDateOfReturn());
         }
-
-        borrow.setReturnDate(borrowDTO.getReturnDate());
-
-        if(borrowDTO.getReturnDate() == null){
-            if (!reservationService.existById(borrowDTO.getReservationId())) {
-                throw new BadRequestException("This reservation does not exist");
-            }
-            borrow.setReservation(reservationRepository.getOne(borrowDTO.getReservationId()));
-            borrow.setUsername(reservationRepository.getOne(borrowDTO.getReservationId()).getUsername().getUsername());
-        }
-
         if (borrowDTO.getReturnDate() != null) {
+            borrow.setReturnDate(borrowDTO.getReturnDate());
             borrow.setReservation(null);
         }
         borrowRepository.save(borrow);
