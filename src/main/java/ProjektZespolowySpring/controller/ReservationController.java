@@ -120,7 +120,7 @@ public class ReservationController {
 
     private void badUser(int reservationId, Authentication authentication)
     {
-        ReservationDTO dto = reservationService.findById(reservationId).orElseThrow();
+        ReservationDTO dto = reservationService.findById(reservationId).orElseThrow(NotFoundException::new);
 
         if( !dto.getUsername().equals(authentication.getName()) ){
             throw new BadRequestException("It's not your reservation");
