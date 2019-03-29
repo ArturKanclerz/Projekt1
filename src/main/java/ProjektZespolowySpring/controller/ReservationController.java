@@ -7,6 +7,8 @@ import ProjektZespolowySpring.service.BookService;
 import ProjektZespolowySpring.service.ReservationService;
 import ProjektZespolowySpring.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -15,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @RestController
 public class ReservationController {
@@ -31,31 +36,32 @@ public class ReservationController {
 
 
     @PostMapping("/reservations")
-    public ResponseEntity<?> addReservation(@RequestBody @Valid ReservationDTO dto, BindingResult result, Authentication authentication)
+    public ResponseEntity<Resource<ReservationDTO>> addReservation(@RequestBody @Valid ReservationDTO reservationDTO, BindingResult result, Authentication authentication)
     {
-        checkPostErrors(dto,result, authentication);
-        int id = reservationService.add(dto,authentication);
-        return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/reservations/" + id)).build();
+        checkPostErrors(reservationDTO,result, authentication);
+        ReservationDTO dto = reservationService.add(reservationDTO,authentication);
+        return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/reservations/" + dto.getId()))
+                .body(toResource(dto));
     }
 
     @GetMapping("/reservations")
-    public List<ReservationDTO> getReservations(Authentication authentication) {
-        return reservationService.findAll(authentication);
+    public Resources<Resource<ReservationDTO>> getReservations(Authentication authentication) {
+        return toResources(reservationService.findAll(authentication));
     }
 
     @GetMapping("/reservations/{id}")
-    public ReservationDTO getReservation(@PathVariable int id, Authentication authentication)
+    public Resource<ReservationDTO> getReservation(@PathVariable int id, Authentication authentication)
     {
         checkGetErrors(id, authentication);
-        return reservationService.findById(id).orElseThrow(NotFoundException::new);
+        return toResource(reservationService.findById(id).orElseThrow(NotFoundException::new));
     }
 
     @PutMapping("/reservations/{id}")
-    public ResponseEntity<?> updateReservation(@PathVariable int id, @RequestBody @Valid ReservationDTO dto, BindingResult result, Authentication authentication)
+    public ResponseEntity<Resource<ReservationDTO>> updateReservation(@PathVariable int id, @RequestBody @Valid ReservationDTO reservationDTO, BindingResult result, Authentication authentication)
     {
-        checkPutErrors(id,result,dto,authentication);
-        reservationService.update(id,dto,authentication);
-        return ResponseEntity.ok().build();
+        checkPutErrors(id,result,reservationDTO,authentication);
+        ReservationDTO dto = reservationService.update(id,reservationDTO,authentication);
+        return ResponseEntity.ok().body(toResource(dto));
     }
 
 
@@ -138,4 +144,16 @@ public class ReservationController {
             throw new NotFoundException();
         }
     }
+
+    private Resource<ReservationDTO> toResource(ReservationDTO dto) {
+        return new Resource<>(dto,
+                linkTo(ReservationController.class).slash("reservations/" + dto.getId()).withSelfRel(),
+                linkTo(ReservationController.class).slash("reservations/" + dto.getId()).withRel("reservation"));
+    }
+
+    private Resources<Resource<ReservationDTO>> toResources(List<ReservationDTO> list) {
+        return new Resources<>(list.stream().map(this::toResource).collect(Collectors.toList()),
+                linkTo(ReservationController.class).slash("reservations").withSelfRel());
+    }
+
 }

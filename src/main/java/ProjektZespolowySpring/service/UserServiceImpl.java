@@ -37,13 +37,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void add(UserDTO dto) {
-        userRepository.save(new User(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail()));
+    public UserDTO add(UserDTO dto) {
+        User u = userRepository.save(new User(dto.getUsername(), passwordEncoder.encode(dto.getPassword()), dto.getEmail()));
+        return new UserDTO(u.getUsername(), u.getEmail());
     }
 
     @Override
-    public void update(String id, UserDTO dto) {
-        userRepository.save(new User(id, passwordEncoder.encode(dto.getPassword()), dto.getEmail()));
+    public UserDTO update(String id, UserDTO dto) {
+        User u = userRepository.save(new User(id, passwordEncoder.encode(dto.getPassword()), dto.getEmail()));
+        return new UserDTO(u.getUsername(), u.getEmail());
     }
 
     @Override

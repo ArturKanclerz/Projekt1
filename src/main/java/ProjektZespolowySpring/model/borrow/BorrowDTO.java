@@ -1,8 +1,11 @@
 package ProjektZespolowySpring.model.borrow;
 
+import org.springframework.hateoas.core.Relation;
+
 import javax.validation.constraints.NotNull;
 import java.util.Calendar;
 
+@Relation(collectionRelation = "borrows")
 public class BorrowDTO {
 
     private int id;

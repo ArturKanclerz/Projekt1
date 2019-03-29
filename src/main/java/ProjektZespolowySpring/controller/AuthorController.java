@@ -6,6 +6,8 @@ import ProjektZespolowySpring.model.author.AuthorDTO;
 import ProjektZespolowySpring.service.AuthorService;
 import ProjektZespolowySpring.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -14,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @RestController
 public class AuthorController {
@@ -26,27 +31,28 @@ public class AuthorController {
     }
 
     @PostMapping("/authors")
-    public ResponseEntity<?> addBook(@RequestBody @Valid AuthorDTO authorDTO, BindingResult result) {
+    public ResponseEntity<Resource<AuthorDTO>> addBook(@RequestBody @Valid AuthorDTO authorDTO, BindingResult result) {
         checkPostErrors(authorDTO, result);
-        int id = authorService.add(authorDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/authors/" + id)).build();
+        AuthorDTO dto = authorService.add(authorDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/authors/" + dto.getId()))
+                .body(toResource(dto));
     }
 
     @GetMapping("/authors")
-    public List<AuthorDTO> getAuthors() {
-        return authorService.findAll();
+    public Resources<Resource<AuthorDTO>> getAuthors() {
+        return toResources(authorService.findAll());
     }
 
     @GetMapping("/authors/{id}")
-    public AuthorDTO getAuthor(@PathVariable int id) {
-        return authorService.findById(id).orElseThrow(NotFoundException::new);
+    public Resource<AuthorDTO> getAuthor(@PathVariable int id) {
+        return toResource(authorService.findById(id).orElseThrow(NotFoundException::new));
     }
 
     @PutMapping("/authors/{id}")
-    public ResponseEntity<?> updtadeAuthor(@PathVariable int id, @RequestBody @Valid AuthorDTO authorDTO, BindingResult result) {
+    public ResponseEntity<Resource<AuthorDTO>> updtadeAuthor(@PathVariable int id, @RequestBody @Valid AuthorDTO authorDTO, BindingResult result) {
         checkPutErrors(id, result, authorDTO);
-        authorService.update(id, authorDTO);
-        return ResponseEntity.ok().build();
+        AuthorDTO dto = authorService.update(id, authorDTO);
+        return ResponseEntity.ok().body(toResource(dto));
     }
 
     @DeleteMapping("/authors/{id}")
@@ -85,6 +91,17 @@ public class AuthorController {
         if (result.hasErrors()) {
             throw new BadRequestException(Util.getErrorMessage(result));
         }
+    }
+
+    private Resource<AuthorDTO> toResource(AuthorDTO dto) {
+        return new Resource<>(dto,
+                linkTo(AuthorController.class).slash("authors/" + dto.getId()).withSelfRel(),
+                linkTo(AuthorController.class).slash("authors/" + dto.getId()).withRel("author"));
+    }
+
+    private Resources<Resource<AuthorDTO>> toResources(List<AuthorDTO> list) {
+        return new Resources<>(list.stream().map(this::toResource).collect(Collectors.toList()),
+                linkTo(AuthorController.class).slash("authors").withSelfRel());
     }
 
 }

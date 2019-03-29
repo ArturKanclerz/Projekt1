@@ -14,13 +14,13 @@ public interface BookService {
 
     Book getOne(int id);
 
-    int add(BookDTO bookDTO);
+    BookDTO add(BookDTO bookDTO);
 
     int getCountOfBookReservations(int bookID);
 
     void deleteById(int id);
 
-    void update(int id, BookDTO bookDTO);
+    BookDTO update(int id, BookDTO bookDTO);
 
     boolean existsById(int id);
 }

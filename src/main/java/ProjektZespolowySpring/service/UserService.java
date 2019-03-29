@@ -11,9 +11,9 @@ public interface UserService {
 
     Optional<UserDTO> findById(String id);
 
-    void add(UserDTO dto);
+    UserDTO add(UserDTO dto);
 
-    void update(String id, UserDTO dto);
+    UserDTO update(String id, UserDTO dto);
 
     void deleteById(String id);
 

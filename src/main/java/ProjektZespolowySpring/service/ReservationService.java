@@ -12,12 +12,14 @@ public interface ReservationService {
     List<ReservationDTO> findAll(Authentication authentication);
 
     Reservation getOne(int id);
-    int add(ReservationDTO dto, Authentication authentication);
+
+    ReservationDTO add(ReservationDTO dto, Authentication authentication);
 
     Optional<ReservationDTO> findById(int id);
+
     boolean existById(int id);
 
-    void update(int id, ReservationDTO dto, Authentication authentication);
+    ReservationDTO update(int id, ReservationDTO dto, Authentication authentication);
 
     void deleteById(int id);
 }

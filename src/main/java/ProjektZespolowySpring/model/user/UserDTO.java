@@ -1,11 +1,13 @@
 package ProjektZespolowySpring.model.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.hateoas.core.Relation;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+@Relation(collectionRelation = "users")
 public class UserDTO {
 
     @NotNull

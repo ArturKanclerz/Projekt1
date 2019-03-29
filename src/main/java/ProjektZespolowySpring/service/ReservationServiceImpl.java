@@ -53,10 +53,11 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public int add(ReservationDTO dto, Authentication authentication) {
-        return reservationRepository.save((new Reservation(new User(authentication.getName()),
+    public ReservationDTO add(ReservationDTO dto, Authentication authentication) {
+        Reservation r = reservationRepository.save((new Reservation(new User(authentication.getName()),
                 Calendar.getInstance(),
-                new Book(dto.getBookId())))).getId();
+                new Book(dto.getBookId()))));
+        return new ReservationDTO(r.getId(), r.getReservedBook().getId(), r.getUsername().getUsername(), r.getReservationDate());
     }
 
     @Override
@@ -70,13 +71,14 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public void update(int id, ReservationDTO dto, Authentication authentication) {
+    public ReservationDTO update(int id, ReservationDTO dto, Authentication authentication) {
         Reservation reservation = reservationRepository.getOne(id);
         Book book = bookService.getOne(dto.getBookId());
         reservation.setId(id);
         reservation.setReservedBook(book);
         reservation.setReservationDate(Calendar.getInstance());
-        reservationRepository.save(reservation);
+        Reservation r = reservationRepository.save(reservation);
+        return new ReservationDTO(r.getId(), r.getReservedBook().getId(), r.getUsername().getUsername(), r.getReservationDate());
     }
 
     @Override

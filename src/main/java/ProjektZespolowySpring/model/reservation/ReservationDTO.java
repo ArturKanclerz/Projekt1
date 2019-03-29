@@ -1,9 +1,12 @@
 package ProjektZespolowySpring.model.reservation;
 
 
+import org.springframework.hateoas.core.Relation;
+
 import javax.validation.constraints.NotNull;
 import java.util.Calendar;
 
+@Relation(collectionRelation = "reservations")
 public class ReservationDTO {
 
     private int id;

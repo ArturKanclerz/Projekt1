@@ -14,11 +14,11 @@ public interface BorrowService {
 
     Borrow getOne(int id);
 
-    int add(BorrowDTO borrowDTO);
+    BorrowDTO add(BorrowDTO borrowDTO);
 
     void deleteById(int id);
 
-    void update(int id, BorrowDTO borrowDTO);
+    BorrowDTO update(int id, BorrowDTO borrowDTO);
 
     boolean existsById(int id);
 }

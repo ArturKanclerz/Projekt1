@@ -8,6 +8,8 @@ import ProjektZespolowySpring.service.BorrowService;
 import ProjektZespolowySpring.service.ReservationService;
 import ProjektZespolowySpring.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -16,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @RestController
 public class BorrowController {
@@ -30,27 +35,28 @@ public class BorrowController {
     }
 
     @PostMapping("/borrows")
-    public ResponseEntity<?> addBorrow(@RequestBody BorrowDTO borrowDTO, BindingResult result) {
+    public ResponseEntity<Resource<BorrowDTO>> addBorrow(@RequestBody BorrowDTO borrowDTO, BindingResult result) {
         checkPostErrors(borrowDTO, result);
-        int id = borrowService.add(borrowDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/borrows/" + id)).build();
+        BorrowDTO dto = borrowService.add(borrowDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/borrows/" + dto.getId()))
+                .body(toResource(dto));
     }
 
     @GetMapping("/borrows")
-    public List<BorrowDTO> getBorrows() {
-        return borrowService.findAll();
+    public Resources<Resource<BorrowDTO>> getBorrows() {
+        return toResources(borrowService.findAll());
     }
 
     @GetMapping("/borrows/{id}")
-    public BorrowDTO getBorrow(@PathVariable int id) {
-        return borrowService.findById(id).orElseThrow(NotFoundException::new);
+    public Resource<BorrowDTO> getBorrow(@PathVariable int id) {
+        return toResource(borrowService.findById(id).orElseThrow(NotFoundException::new));
     }
 
     @PutMapping("/borrows/{id}")
-    public ResponseEntity<?> updtadeBorrow(@PathVariable int id, @RequestBody @Valid BorrowDTO borrowDTO, BindingResult result) {
+    public ResponseEntity<Resource<BorrowDTO>> updtadeBorrow(@PathVariable int id, @RequestBody @Valid BorrowDTO borrowDTO, BindingResult result) {
         checkPutErrors(borrowDTO, result, id);
-        borrowService.update(id, borrowDTO);
-        return ResponseEntity.ok().build();
+        BorrowDTO dto = borrowService.update(id, borrowDTO);
+        return ResponseEntity.ok().body(toResource(dto));
     }
 
     @DeleteMapping("/borrows/{id}")
@@ -97,4 +103,16 @@ public class BorrowController {
             }
         }
     }
+
+    private Resource<BorrowDTO> toResource(BorrowDTO dto) {
+        return new Resource<>(dto,
+                linkTo(BorrowController.class).slash("borrows/" + dto.getId()).withSelfRel(),
+                linkTo(BorrowController.class).slash("borrows/" + dto.getId()).withRel("borrow"));
+    }
+
+    private Resources<Resource<BorrowDTO>> toResources(List<BorrowDTO> list) {
+        return new Resources<>(list.stream().map(this::toResource).collect(Collectors.toList()),
+                linkTo(BorrowController.class).slash("borrows").withSelfRel());
+    }
+
 }

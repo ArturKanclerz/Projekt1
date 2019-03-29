@@ -1,10 +1,12 @@
 package ProjektZespolowySpring.model.book;
 
 import ProjektZespolowySpring.model.author.AuthorDTO;
+import org.springframework.hateoas.core.Relation;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+@Relation(collectionRelation = "books")
 public class BookDTO {
 
     private int id;

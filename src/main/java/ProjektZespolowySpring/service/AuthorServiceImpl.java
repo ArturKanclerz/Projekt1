@@ -38,8 +38,9 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public int add(AuthorDTO authorDTO) {
-        return authorRepository.save(new Author(authorDTO.getFirstName(), authorDTO.getLastName())).getId();
+    public AuthorDTO add(AuthorDTO authorDTO) {
+        Author a = authorRepository.save(new Author(authorDTO.getFirstName(), authorDTO.getLastName()));
+        return new AuthorDTO(a.getFirstName(), a.getLastName(), a.getId());
     }
 
     @Override
@@ -48,12 +49,13 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public void update(int id, AuthorDTO authorDTO) {
+    public AuthorDTO update(int id, AuthorDTO authorDTO) {
         Author author = authorRepository.getOne(id);
         author.setId(id);
         author.setFirstName(authorDTO.getFirstName());
         author.setLastName(authorDTO.getLastName());
-        authorRepository.save(author);
+        Author a = authorRepository.save(author);
+        return new AuthorDTO(a.getFirstName(), a.getLastName(), a.getId());
     }
 
     @Override

@@ -39,8 +39,9 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public int add(BookDTO bookDTO) {
-        return bookRepository.save(new Book(bookDTO.getTitle(), authorService.getOne(bookDTO.getAuthorId()), bookDTO.getNumberOfCopies())).getId();
+    public BookDTO add(BookDTO bookDTO) {
+        Book b = bookRepository.save(new Book(bookDTO.getTitle(), authorService.getOne(bookDTO.getAuthorId()), bookDTO.getNumberOfCopies()));
+        return new BookDTO(b.getId(), b.getTitle(), new AuthorDTO(b.getAuthor().getFirstName(), b.getAuthor().getLastName(), b.getAuthor().getId()), b.getAuthor().getId(), b.getNumberOfCopies());
     }
 
     @Override
@@ -54,13 +55,14 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void update(int id, BookDTO bookDTO) {
+    public BookDTO update(int id, BookDTO bookDTO) {
         Book book = bookRepository.getOne(id);
         book.setId(id);
         book.setTitle(bookDTO.getTitle());
         book.setAuthor(authorService.getOne(bookDTO.getAuthorId()));
         book.setNumberOfCopies(bookDTO.getNumberOfCopies());
-        bookRepository.save(book);
+        Book b = bookRepository.save(book);
+        return new BookDTO(b.getId(), b.getTitle(), new AuthorDTO(b.getAuthor().getFirstName(), b.getAuthor().getLastName(), b.getAuthor().getId()), b.getAuthor().getId(), b.getNumberOfCopies());
     }
 
     @Override

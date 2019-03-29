@@ -14,11 +14,11 @@ public interface AuthorService {
 
     Optional<AuthorDTO> findById(int id);
 
-    int add(AuthorDTO authorDTO);
+    AuthorDTO add(AuthorDTO authorDTO);
 
     void deleteById(int id);
 
-    void update(int id, AuthorDTO authorDTO);
+    AuthorDTO update(int id, AuthorDTO authorDTO);
 
     boolean existsById(int id);
 

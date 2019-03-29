@@ -45,12 +45,15 @@ public class BorrowServiceImpl implements BorrowService {
     }
 
     @Override
-    public int add(BorrowDTO borrowDTO) {
+    public BorrowDTO add(BorrowDTO borrowDTO) {
         Calendar borrowDate = Calendar.getInstance();
         Calendar dateOfReturn = Calendar.getInstance();
         dateOfReturn.add(Calendar.DATE, 14);
 
-        return borrowRepository.save(new Borrow(reservationRepository.getOne(borrowDTO.getReservationId()), borrowDate, null, dateOfReturn, reservationRepository.getOne(borrowDTO.getReservationId()).getUsername().getUsername())).getId();
+        Borrow b = borrowRepository.save(new Borrow(reservationRepository.getOne(borrowDTO.getReservationId()), borrowDate, null, dateOfReturn, reservationRepository.getOne(borrowDTO.getReservationId()).getUsername().getUsername()));
+        return new BorrowDTO(b.getId(),
+                Optional.ofNullable(b.getReservation()).map(Reservation::getId).orElse(-1), b.getUsername(),
+                b.getBorrowDate(), b.getReturnDate(), b.getDateOfReturn());
     }
 
     @Override
@@ -59,7 +62,7 @@ public class BorrowServiceImpl implements BorrowService {
     }
 
     @Override
-    public void update(int id, BorrowDTO borrowDTO) {
+    public BorrowDTO update(int id, BorrowDTO borrowDTO) {
         Borrow borrow = borrowRepository.getOne(id);
         if (borrowDTO.getBorrowDate() != null) {
             borrow.setBorrowDate(borrowDTO.getBorrowDate());
@@ -71,7 +74,10 @@ public class BorrowServiceImpl implements BorrowService {
             borrow.setReturnDate(borrowDTO.getReturnDate());
             borrow.setReservation(null);
         }
-        borrowRepository.save(borrow);
+        Borrow b = borrowRepository.save(borrow);
+        return new BorrowDTO(b.getId(),
+                Optional.ofNullable(b.getReservation()).map(Reservation::getId).orElse(-1), b.getUsername(),
+                b.getBorrowDate(), b.getReturnDate(), b.getDateOfReturn());
     }
 
     @Override

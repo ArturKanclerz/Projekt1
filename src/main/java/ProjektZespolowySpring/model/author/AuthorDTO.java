@@ -1,8 +1,11 @@
 package ProjektZespolowySpring.model.author;
 
+import org.springframework.hateoas.core.Relation;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+@Relation(collectionRelation = "authors")
 public class AuthorDTO {
 
     @NotNull
