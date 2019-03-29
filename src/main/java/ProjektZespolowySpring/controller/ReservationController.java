@@ -2,10 +2,7 @@ package ProjektZespolowySpring.controller;
 
 import ProjektZespolowySpring.exception.BadRequestException;
 import ProjektZespolowySpring.exception.NotFoundException;
-import ProjektZespolowySpring.model.book.Book;
-import ProjektZespolowySpring.model.reservation.Reservation;
 import ProjektZespolowySpring.model.reservation.ReservationDTO;
-import ProjektZespolowySpring.model.user.User;
 import ProjektZespolowySpring.service.BookService;
 import ProjektZespolowySpring.service.ReservationService;
 import ProjektZespolowySpring.util.Util;
@@ -47,30 +44,34 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations/{id}")
-    public ReservationDTO getReservation(@PathVariable int id)
+    public ReservationDTO getReservation(@PathVariable int id, Authentication authentication)
     {
+        checkGetErrors(id, authentication);
         return reservationService.findById(id).orElseThrow(NotFoundException::new);
     }
 
     @PutMapping("/reservations/{id}")
     public ResponseEntity<?> updateReservation(@PathVariable int id, @RequestBody @Valid ReservationDTO dto, BindingResult result, Authentication authentication)
     {
-        checkPutErrors(id,result,dto);
+        checkPutErrors(id,result,dto,authentication);
         reservationService.update(id,dto,authentication);
         return ResponseEntity.ok().build();
     }
 
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<?> deleteAuthor(@PathVariable int id)
+    public ResponseEntity<?> deleteAuthor(@PathVariable int id, Authentication authentication)
     {
-        checkDeleteErrors(id);
+        checkDeleteErrors(id, authentication);
         reservationService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
-    private void checkDeleteErrors(int id) {
-        notFound(id);
+    private void checkGetErrors(int reservationId, Authentication authentication)
+    {
+        notFound(reservationId);
+        if( !Util.isAdmin(authentication) )
+            badUser(reservationId,authentication);
     }
 
     private void checkPostErrors(ReservationDTO dto, BindingResult result){
@@ -82,11 +83,28 @@ public class ReservationController {
         }
     }
 
-    private void checkPutErrors(int id, BindingResult result, ReservationDTO dto)
+    private void checkPutErrors(int id, BindingResult result, ReservationDTO dto, Authentication authentication)
     {
         badRequest(result);
         notFound(id);
+        if( !Util.isAdmin(authentication) )
+            badUser(id, authentication);
         checkPostErrors(dto,result);
+    }
+
+    private void checkDeleteErrors(int id, Authentication authentication) {
+        notFound(id);
+        if( !Util.isAdmin(authentication) )
+            badUser(id, authentication);
+    }
+
+    private void badUser(int reservationId, Authentication authentication)
+    {
+        ReservationDTO dto = reservationService.findById(reservationId).orElseThrow(NotFoundException::new);
+
+        if( !dto.getUsername().equals(authentication.getName()) ){
+            throw new BadRequestException("It's not your reservation");
+        }
     }
 
     private void badRequest(BindingResult result){

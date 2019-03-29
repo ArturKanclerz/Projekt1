@@ -1,6 +1,7 @@
 package ProjektZespolowySpring.model.book;
 
 import ProjektZespolowySpring.model.author.Author;
+import ProjektZespolowySpring.model.borrow.Borrow;
 import ProjektZespolowySpring.model.reservation.Reservation;
 
 import javax.persistence.*;
