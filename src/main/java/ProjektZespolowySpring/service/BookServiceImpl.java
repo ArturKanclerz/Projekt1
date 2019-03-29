@@ -1,6 +1,5 @@
 package ProjektZespolowySpring.service;
 
-import ProjektZespolowySpring.model.author.Author;
 import ProjektZespolowySpring.model.author.AuthorDTO;
 import ProjektZespolowySpring.model.book.Book;
 import ProjektZespolowySpring.model.book.BookDTO;

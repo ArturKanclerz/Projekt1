@@ -12,7 +12,7 @@ public interface ReservationService {
     List<ReservationDTO> findAll(Authentication authentication);
 
     Reservation getOne(int id);
-    void add(ReservationDTO dto, Authentication authentication);
+    int add(ReservationDTO dto, Authentication authentication);
 
     Optional<ReservationDTO> findById(int id);
     boolean existById(int id);

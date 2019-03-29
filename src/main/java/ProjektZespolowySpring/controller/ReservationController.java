@@ -9,7 +9,6 @@ import ProjektZespolowySpring.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jmx.export.UnableToRegisterMBeanException;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -35,8 +34,8 @@ public class ReservationController {
     public ResponseEntity<?> addReservation(@RequestBody @Valid ReservationDTO dto, BindingResult result, Authentication authentication)
     {
         checkPostErrors(dto,result, authentication);
-        reservationService.add(dto,authentication);
-        return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/reservations/")).build();
+        int id = reservationService.add(dto,authentication);
+        return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/reservations/" + id)).build();
     }
 
     @GetMapping("/reservations")
@@ -109,7 +108,9 @@ public class ReservationController {
     }
 
     private void unavailableBook(int id)
-    {
+    {   if(!bookService.existsById(id)){
+            throw new BadRequestException("this book does not exist");
+        }
         int countOfReservations = bookService.getCountOfBookReservations(id);
         int copies = bookService.getOne(id).getNumberOfCopies();
         if(countOfReservations >= copies){

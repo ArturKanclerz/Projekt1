@@ -21,28 +21,26 @@ public class ReservationServiceImpl implements ReservationService {
 
     private ReservationRepository reservationRepository;
     private BookService bookService;
-    private UserService userService;
 
     @Autowired
-    public ReservationServiceImpl(ReservationRepository reservationRepository, BookService bookService, UserService userService) {
+    public ReservationServiceImpl(ReservationRepository reservationRepository, BookService bookService) {
         this.reservationRepository = reservationRepository;
         this.bookService = bookService;
-        this.userService = userService;
     }
 
     @Override
     public List<ReservationDTO> findAll(Authentication authentication) {
 
         List<ReservationDTO> list = reservationRepository.findAll().stream()
-                .map(reservation -> new ReservationDTO(reservation.getId(),reservation.getReservedBook().getId(),
+                .map(reservation -> new ReservationDTO(reservation.getId(), reservation.getReservedBook().getId(),
                         reservation.getUsername().getUsername(), reservation.getReservationDate()))
                 .collect(Collectors.toList());
-        if(Util.isAdmin(authentication)){
+        if (Util.isAdmin(authentication)) {
             return list;
         }
         List<ReservationDTO> output = new ArrayList<>();
-        for( ReservationDTO dto : list){
-            if(dto.getUsername().equals(authentication.getName())){
+        for (ReservationDTO dto : list) {
+            if (dto.getUsername().equals(authentication.getName())) {
                 output.add(dto);
             }
         }
@@ -55,15 +53,15 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public void add(ReservationDTO dto, Authentication authentication){
-        reservationRepository.save((new Reservation(new User(authentication.getName()),
+    public int add(ReservationDTO dto, Authentication authentication) {
+        return reservationRepository.save((new Reservation(new User(authentication.getName()),
                 Calendar.getInstance(),
-                new Book(dto.getBookId()))));
+                new Book(dto.getBookId())))).getId();
     }
 
     @Override
     public Optional<ReservationDTO> findById(int id) {
-        return reservationRepository.findById(id).map(reservation -> new ReservationDTO(reservation.getId(),reservation.getReservedBook().getId(),reservation.getUsername().getUsername(),reservation.getReservationDate()));
+        return reservationRepository.findById(id).map(reservation -> new ReservationDTO(reservation.getId(), reservation.getReservedBook().getId(), reservation.getUsername().getUsername(), reservation.getReservationDate()));
     }
 
     @Override
@@ -75,7 +73,6 @@ public class ReservationServiceImpl implements ReservationService {
     public void update(int id, ReservationDTO dto, Authentication authentication) {
         Reservation reservation = reservationRepository.getOne(id);
         Book book = bookService.getOne(dto.getBookId());
-        //User user = userService.findById();
         reservation.setId(id);
         reservation.setReservedBook(book);
         reservation.setReservationDate(Calendar.getInstance());

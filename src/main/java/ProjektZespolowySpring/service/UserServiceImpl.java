@@ -26,7 +26,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> findAll() {
-        System.out.println(passwordEncoder.encode("12345"));
         return userRepository.findAll().stream()
                 .map(user -> new UserDTO(user.getUsername(), user.getEmail()))
                 .collect(Collectors.toList());

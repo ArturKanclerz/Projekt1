@@ -3,6 +3,7 @@ package ProjektZespolowySpring.service;
 import ProjektZespolowySpring.model.borrow.Borrow;
 import ProjektZespolowySpring.model.borrow.BorrowDTO;
 import ProjektZespolowySpring.model.borrow.BorrowRepository;
+import ProjektZespolowySpring.model.reservation.Reservation;
 import ProjektZespolowySpring.model.reservation.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,12 +27,16 @@ public class BorrowServiceImpl implements BorrowService {
 
     @Override
     public List<BorrowDTO> findAll() {
-        return borrowRepository.findAll().stream().map(borrow -> new BorrowDTO(borrow.getId(), borrow.getReservation().getId(), borrow.getBorrowDate(), borrow.getReturnDate(), borrow.getDateOfReturn())).collect(Collectors.toList());
+        return borrowRepository.findAll().stream().map(borrow -> new BorrowDTO(borrow.getId(),
+                Optional.ofNullable(borrow.getReservation()).map(Reservation::getId).orElse(-1),
+                borrow.getBorrowDate(), borrow.getReturnDate(), borrow.getDateOfReturn())).collect(Collectors.toList());
     }
 
     @Override
     public Optional<BorrowDTO> findById(int id) {
-        return borrowRepository.findById(id).map(borrow -> new BorrowDTO(borrow.getId(), borrow.getReservation().getId(), borrow.getBorrowDate(), borrow.getReturnDate(), borrow.getDateOfReturn()));
+        return borrowRepository.findById(id).map(borrow -> new BorrowDTO(borrow.getId(),
+                Optional.ofNullable(borrow.getReservation()).map(Reservation::getId).orElse(-1),
+                borrow.getBorrowDate(), borrow.getReturnDate(), borrow.getDateOfReturn()));
     }
 
     @Override

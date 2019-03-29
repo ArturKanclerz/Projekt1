@@ -5,6 +5,7 @@ import ProjektZespolowySpring.exception.NotFoundException;
 import ProjektZespolowySpring.model.borrow.BorrowDTO;
 
 import ProjektZespolowySpring.service.BorrowService;
+import ProjektZespolowySpring.service.ReservationService;
 import ProjektZespolowySpring.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,10 +21,12 @@ import java.util.List;
 public class BorrowController {
 
     private BorrowService borrowService;
+    private ReservationService reservationService;
 
     @Autowired
-    public BorrowController(BorrowService borrowService) {
+    public BorrowController(BorrowService borrowService, ReservationService reservationService) {
         this.borrowService = borrowService;
+        this.reservationService = reservationService;
     }
 
     @PostMapping("/borrows")
@@ -57,13 +60,19 @@ public class BorrowController {
         return ResponseEntity.ok().build();
     }
 
-    private void checkPostErrors(BorrowDTO borrowkDTO, BindingResult result) {
+    private void checkPostErrors(BorrowDTO borrowDTO, BindingResult result) {
         badRequest(result);
+        if (!reservationService.existById(borrowDTO.getReservationId())) {
+            throw new BadRequestException("this reservation does not exist");
+        }
     }
 
     private void checkPutErrors(BorrowDTO borrowDTO, BindingResult result, int id) {
         badRequest(result);
         notFound(id);
+        if (!reservationService.existById(borrowDTO.getReservationId())) {
+            throw new BadRequestException("this reservation does not exist");
+        }
     }
 
     private void checkDeleteErrors(int id) {
