@@ -47,7 +47,7 @@ public class BorrowController {
     }
 
     @PutMapping("/borrows/{id}")
-    public ResponseEntity<?> updtadeBorrow(@PathVariable int id, @RequestBody @Valid BorrowDTO borrowDTO, BindingResult result) {
+    public ResponseEntity<?> updateBorrow(@PathVariable int id, @RequestBody @Valid BorrowDTO borrowDTO, BindingResult result) {
         checkPutErrors(borrowDTO, result, id);
         borrowService.update(id, borrowDTO);
         return ResponseEntity.ok().build();

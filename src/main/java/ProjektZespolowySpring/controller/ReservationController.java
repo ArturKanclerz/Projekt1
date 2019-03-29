@@ -60,7 +60,7 @@ public class ReservationController {
 
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<?> deleteAuthor(@PathVariable int id, Authentication authentication)
+    public ResponseEntity<?> deleteReservation(@PathVariable int id, Authentication authentication)
     {
         checkDeleteErrors(id, authentication);
         reservationService.deleteById(id);
@@ -120,7 +120,7 @@ public class ReservationController {
 
     private void badUser(int reservationId, Authentication authentication)
     {
-        ReservationDTO dto = reservationService.findById(reservationId).orElseThrow(NotFoundException::new);
+        ReservationDTO dto = reservationService.findById(reservationId).orElseThrow();
 
         if( !dto.getUsername().equals(authentication.getName()) ){
             throw new BadRequestException("It's not your reservation");
